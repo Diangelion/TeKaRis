@@ -11,7 +11,7 @@ import React from "react";
 
 const Login: React.FC = () => {
   return (
-    <IonPage className="login-container">
+    <IonPage>
       <IonContent>
         <IonItem>
           <IonLabel className="ion-text-center">
@@ -19,7 +19,7 @@ const Login: React.FC = () => {
               src="https://docs-demo.ionic.io/assets/madison.jpg"
               alt="The Wisconsin State Capitol building in Madison, WI at night"
             ></IonImg>
-            <h1>LOGINssss</h1>
+            <h1>LOGIN</h1>
           </IonLabel>
         </IonItem>
 
