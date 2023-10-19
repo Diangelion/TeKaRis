@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Quantico&display=swap');
+
+.border-logo {
+    display: flex;
+    flex-direction: column;
+    margin: 50px 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid black;
+}
+
+.logo, .judul {
+    font-size: 50px;
+    font-family: 'Quantico';
+}
+
+.text-font {
+    font-family: 'Quantico';
+}
+
+.input {
+    margin-left: 30px;
+    margin-right: 30px;
+}
