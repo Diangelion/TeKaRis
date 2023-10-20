@@ -1,7 +1,0 @@
-{
-  "name": "TeKaRis",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "react-vite"
-}
