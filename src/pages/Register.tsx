@@ -76,6 +76,14 @@ const Register: React.FC = () => {
     }));
   };
 
+  const handleRegister = async () => {
+    try {
+      console.log(registerData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -196,6 +204,7 @@ const Register: React.FC = () => {
 
           <IonRow className="ion-margin-vertical">
             <IonCol>
+              {/* <IonButton onClick={handleRegister}>Register</IonButton> */}
               <IonButton routerLink="/home">Register</IonButton>
             </IonCol>
           </IonRow>

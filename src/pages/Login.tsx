@@ -52,7 +52,13 @@ const Login: React.FC = () => {
     }));
   };
 
-  console.log(loginData);
+  const handleLogin = async () => {
+    try {
+      console.log(loginData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <IonPage>
@@ -109,9 +115,8 @@ const Login: React.FC = () => {
 
           <IonRow className="ion-margin-vertical">
             <IonCol>
-              <IonButton routerLink="/home" size="default">
-                Login
-              </IonButton>
+              {/* <IonButton onClick={handleLogin}>Login</IonButton> */}
+              <IonButton routerLink="/home">Login</IonButton>
             </IonCol>
           </IonRow>
 
