@@ -19,7 +19,7 @@ import {
 import { person } from "ionicons/icons";
 
 // Styling
-import "./Profile.css";
+import "../styles/Profile.css";
 
 const Profile: React.FC = () => {
   return (

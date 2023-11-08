@@ -33,7 +33,7 @@ const Home: React.FC = () => {
           </IonButton>
         </div>
         <div className="box-mode ion-padding">
-          <IonButton className="button-mode1" color="warning">
+          <IonButton className="button-mode1" color="warning" routerLink="/mode1">
             <IonLabel className="label-button ion-padding">Mode 1</IonLabel>
           </IonButton>
           <IonButton className="button-mode2" color="warning">

@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Quantico&display=swap');
+
+.card-leaderboard {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-number {
+    font-size: 28px;
+    font-family: "Quantico";
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 12px;
+}
+
+.card-image {
+    width: 28px;
+    height: 28px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 12px;
+}
+
+.card-name {
+    font-size: 28px;
+    font-family: "Quantico";
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.card-point {
+    font-size: 28px;
+    font-family: "Quantico";
+    margin-top: auto;
+    margin-bottom: auto;
+}

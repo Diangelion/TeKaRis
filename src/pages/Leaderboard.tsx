@@ -14,12 +14,37 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import React, { useContext, useRef, useState } from "react";
+import { person } from "ionicons/icons";
+
+import CardLeaderboard from "../components/CardLeaderboard";
 
 const Leaderboard: React.FC = () => {
   return (
     <IonPage>
       <IonHeader></IonHeader>
-      <IonContent>INI PAGE LEADERBOARD HHEE</IonContent>
+      <IonContent color="tertiary">
+        <div className="box-header">
+          <div className="box-judul">
+            <IonLabel>Hello</IonLabel>
+            <IonLabel>Bryan Richie!</IonLabel>
+          </div>
+          <IonButton color="tertiary" routerLink="/profile">
+            <IonIcon icon={person} />
+          </IonButton>
+        </div>
+        <div>
+          <CardLeaderboard number={1} name="John Wick" point="10,000" />
+          <CardLeaderboard number={2} name="Rici" point="9,500" />
+          <CardLeaderboard number={3} name="John Doe" point="9,200" />
+          <CardLeaderboard number={4} name="John John" point="9,000" />
+          <CardLeaderboard number={5} name="Bobby" point="8,100" />
+          <CardLeaderboard number={6} name="Edu" point="7,800" />
+          <CardLeaderboard number={7} name="Axel" point="7,500" />
+          <CardLeaderboard number={8} name="John John John" point="7,300" />
+          <CardLeaderboard number={9} name="John Rici" point="7,100" />
+          <CardLeaderboard number={10} name="John Cena" point="7,000" />
+        </div>
+      </IonContent>
     </IonPage>
   );
 };

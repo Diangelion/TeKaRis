@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Quantico&display=swap');
+
+.konten {
+    display: flex;
+    flex-direction: column;
+}
+
+.text-mode {
+    font-size: 28px;
+    font-family: "Quantico";
+}
+
+.soal {
+    font-size: 28px;
+    font-family: "Quantico";
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 100px;
+}
+
+.box-player {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 100px;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.player-hp {
+    font-size: 28px;
+    font-family: "Quantico";
+}
+
+.player-icon {
+    width: 28px;
+    height: 28px;
+}
+
+.input {
+    width: 300px;
+    font-family: "Quantico";
+    margin-left: auto;
+    margin-right: auto;  
+}
+
+.button-attack {
+    width: 100px;
+    font-family: "Quantico";
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 16px;
+}
