@@ -1,30 +1,24 @@
 import axios from "axios";
-// import useAuth from "../../hook/useAuth";
-
-const TOKEN = localStorage.getItem("access_token");
 
 export const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_BASEURL,
   timeout: 10000,
   headers: {
-    "Content-type": "application/json" || "multipart/form-data",
-    Accept: "application/json" || "multipart/form-data",
-    Authorization: TOKEN ? `Bearer ${TOKEN}` : "",
+    "Content-type": "application/json",
   },
 });
 
 export const axiosClientFile = axios.create({
-  baseURL: import.meta.env.VITE_BASEURL,
+  baseURL: import.meta.env.VITE_RANDOM_INDO_WORD_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "multipart/form-data",
-    Authorization: TOKEN ? `Bearer ${TOKEN}` : "",
   },
 });
 
-export async function get(url: string, params?: any) {
+export async function get(url: string, config?: any) {
   try {
-    const response = await axiosClient.get(url, { params });
+    const response = await axiosClient.get(url, config);
     return response;
   } catch (error) {
     return error;
@@ -36,7 +30,6 @@ export async function post(url: string, data?: any): Promise<any> {
     const response = await axiosClient.post(url, data);
     return response.data;
   } catch (error) {
-    console.log(TOKEN);
     return error;
   }
 }
@@ -46,7 +39,6 @@ export async function postFile(url: string, data?: any): Promise<any> {
     const response = await axiosClientFile.post(url, data);
     return response.data;
   } catch (error) {
-    console.log(TOKEN);
     return error;
   }
 }
