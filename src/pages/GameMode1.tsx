@@ -17,6 +17,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import { useHistory } from "react-router";
 
 // Axios
 import axios from "axios";
@@ -76,25 +77,22 @@ const GameMode1: React.FC = () => {
   };
 
   // Yang axel tambah
+  const history = useHistory();
+  const [answer, setAnswer] = useState<string[]>([]);
   const [englishWord, setEnglishWord] = useState<string>("");
   const [translatedWord, setTranslatedWord] = useState<string>("");
   const [bahasaWord1, setBahasaWord1] = useState<string>("");
   const [bahasaWord2, setBahasaWord2] = useState<string>("");
-  const [answer, setAnswer] = useState<string[]>([]);
   const [lives, setLives] = useState<number>(3);
   const [score, setScore] = useState<number>(0);
+  const [loading, setLoading] = useState<number>(1);
 
   const shuffleAnswer = (array: string[]) => {
     let currentIndex = array.length,  randomIndex;
 
-    // While there remain elements to shuffle.
     while (currentIndex > 0) {
-
-      // Pick a remaining element.
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
-
-      // And swap it with the current element.
       [array[currentIndex], array[randomIndex]] = [
         array[randomIndex], array[currentIndex]];
     }
@@ -109,8 +107,16 @@ const GameMode1: React.FC = () => {
     else {
       setLives(lives - 1);
     }
-    generateWord();
   }
+
+  useEffect(() => {
+    if(lives == 0) {
+      history.length > 0 ? history.goBack() : history.replace('/home');
+    }
+    else {
+      generateWord();
+    }
+  }, [lives, score])
 
   const generateWord = () => {
     // Generate random english word
@@ -183,7 +189,11 @@ const GameMode1: React.FC = () => {
           <div className="box-answer">
             {answer.map((word) => {
               return (
-                <IonButton color="warning" className="button-answer" onClick={() => {playerAnswer(word)}}>
+                <IonButton 
+                  color="warning" 
+                  className="button-answer" 
+                  onClick={() => { playerAnswer(word) }}
+                  >
                   {word}
                 </IonButton>
               )
