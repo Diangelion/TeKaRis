@@ -1,28 +1,20 @@
 import {
   IonButton,
-  IonCol,
   IonContent,
-  IonGrid,
   IonHeader,
   IonIcon,
-  IonInput,
-  IonItem,
   IonLabel,
   IonPage,
-  IonRow,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
 import React, { useContext, useRef, useState } from "react";
 import { person } from "ionicons/icons";
 
-import "../styles/Home.css";
+import "../styles/Home.scss";
 
 const Home: React.FC = () => {
   return (
-    <IonPage>
-      <IonHeader></IonHeader>
-      <IonContent color="tertiary">
+    <IonPage id="HomePageContainer">
+      <IonHeader>
         <div className="box-header">
           <div className="box-judul">
             <IonLabel>Hello</IonLabel>
@@ -32,11 +24,15 @@ const Home: React.FC = () => {
             <IonIcon icon={person} />
           </IonButton>
         </div>
+      </IonHeader>
+
+      <IonContent>
         <div className="box-mode ion-padding">
-          <IonButton className="button-mode1" color="warning" routerLink="/mode1">
+          <IonButton className="play-button" shape="round" routerLink="/mode1">
             <IonLabel className="label-button ion-padding">Mode 1</IonLabel>
           </IonButton>
-          <IonButton className="button-mode2" color="warning">
+
+          <IonButton className="play-button" shape="round">
             <IonLabel className="label-button ion-padding">Mode 2</IonLabel>
           </IonButton>
         </div>

@@ -14,7 +14,7 @@ import {
 import React, { useState } from "react";
 import { eye, eyeOff } from "ionicons/icons";
 
-import "../styles/Register.css";
+import "../styles/Register.sscss";
 
 interface RegisterDataProps {
   name: string;
@@ -92,29 +92,21 @@ const Register: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
-  }
+  };
   const toggleShowConfirmPassword = () => {
     setShowConfirmPassword(!showConfirmPassword);
-  }
+  };
 
   return (
-    <IonPage>
-      <IonHeader>
+    <IonPage id="RegisterPageContainer">
+      <IonContent className="ion-padding">
         <div className="border-logo ion-text-center">
           <IonLabel className="logo">TeKaRis</IonLabel>
-          <IonLabel className="judul">Register</IonLabel>
         </div>
-      </IonHeader>
-
-      {/* <IonContent color="dark" className="ion-text-center"> */}
-      <IonContent className="ion-padding">
+        <h1 className="judul">Register</h1>
         <IonGrid>
           <IonRow>
             <IonCol>
-              {/* <IonItem className="input" color="medium">
-                <IonLabel position="floating">Enter your name</IonLabel>
-                <IonInput></IonInput>
-              </IonItem> */}
               <IonInput
                 type="text"
                 fill="solid"
@@ -122,7 +114,6 @@ const Register: React.FC = () => {
                 labelPlacement="floating"
                 helperText="Enter your name"
                 name="name"
-                // value={registerData.name}
                 onIonBlur={() => markTouched()}
                 onIonInput={(e) => handleInputChange(e)}
               ></IonInput>
@@ -131,10 +122,6 @@ const Register: React.FC = () => {
 
           <IonRow>
             <IonCol>
-              {/* <IonItem className="input" color="medium">
-                <IonLabel position="floating">Enter your email </IonLabel>
-                <IonInput></IonInput>
-              </IonItem> */}
               <IonInput
                 className={`${isValidEmail && "ion-valid"} ${
                   isValidEmail === false && "ion-invalid"
@@ -146,77 +133,69 @@ const Register: React.FC = () => {
                 helperText="Enter a valid email"
                 errorText="Invalid email"
                 name="email"
-                // value={registerData.email}
                 onIonInput={(e) => {
                   validateEmail(e);
                   handleInputChange(e);
                 }}
                 onIonBlur={() => markTouched()}
-                // onIonChange={(e) => handleInputChange(e)}
               ></IonInput>
             </IonCol>
           </IonRow>
 
           <IonRow>
             <IonCol>
-              {/* <IonItem className="input" color="medium">
-                <IonLabel position="floating">Enter your password</IonLabel>
-                <IonInput></IonInput>
-              </IonItem> */}
               <IonItem>
                 <IonInput
                   className={`${isPasswordMatch && "ion-valid"} ${
                     isPasswordMatch === false && "ion-invalid"
                   } ${isTouched && "ion-touched"}`}
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   fill="solid"
                   label="Password"
                   labelPlacement="floating"
                   helperText="Enter your password"
                   errorText="Password and Confirmation Password does not match"
                   name="password"
-                  // value={registerData.password}
                   onIonInput={(e) => {
                     handleInputChange(e);
                     validatePassword(e);
                   }}
                   onIonBlur={() => markTouched()}
-                  // onIonChange={(e) => handleInputChange(e)}
                 ></IonInput>
-                <IonIcon slot="end" icon={showPassword ? eye : eyeOff} onClick={toggleShowPassword}/>
+                <IonIcon
+                  slot="end"
+                  icon={showPassword ? eye : eyeOff}
+                  onClick={toggleShowPassword}
+                />
               </IonItem>
             </IonCol>
           </IonRow>
 
           <IonRow>
             <IonCol>
-              {/* <IonItem className="input" color="medium">
-                <IonLabel position="floating">
-                  Enter your coofirm password
-                </IonLabel>
-                <IonInput></IonInput>
-              </IonItem> */}
               <IonItem>
                 <IonInput
                   className={`${isPasswordMatch && "ion-valid"} ${
                     isPasswordMatch === false && "ion-invalid"
                   } ${isTouched && "ion-touched"}`}
-                  type={showConfirmPassword ? 'text' : 'password'}
+                  type={showConfirmPassword ? "text" : "password"}
                   fill="solid"
                   label="Confirmation Password"
                   labelPlacement="floating"
                   helperText="Confirm your password"
                   errorText="Password and Confirmation Password does not match"
                   name="confirmationPassword"
-                  // value={registerData.confirmationPassword}
                   onIonInput={(e) => {
                     handleInputChange(e);
                     validatePassword(e);
                   }}
                   onIonBlur={() => markTouched()}
-                  // onIonChange={(e) => handleInputChange(e)}
                 ></IonInput>
-                <IonIcon slot="end" icon={showConfirmPassword ? eye : eyeOff} onClick={toggleShowConfirmPassword}/>
+                <IonIcon
+                  slot="end"
+                  icon={showConfirmPassword ? eye : eyeOff}
+                  onClick={toggleShowConfirmPassword}
+                />
               </IonItem>
             </IonCol>
           </IonRow>
@@ -224,7 +203,9 @@ const Register: React.FC = () => {
           <IonRow className="ion-margin-vertical">
             <IonCol>
               {/* <IonButton onClick={handleRegister}>Register</IonButton> */}
-              <IonButton routerLink="/home">Register</IonButton>
+              <IonButton shape="round" routerLink="/home">
+                Register
+              </IonButton>
             </IonCol>
           </IonRow>
 
@@ -233,9 +214,6 @@ const Register: React.FC = () => {
               <IonLabel className="text-font">
                 Already have an account?{" "}
               </IonLabel>
-              {/* <IonButton routerLink="/login" className="text-font">
-                Login
-              </IonButton> */}
               <a href="/login">Login</a>
             </IonCol>
           </IonRow>

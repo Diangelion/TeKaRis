@@ -1,0 +1,46 @@
+:root {
+  --primary-color: #1a1a1a;
+  --secondary-color: #f7f7f7;
+  --tertiary-color: #616571;
+  --accent-color: #93deff;
+}
+
+.ios body {
+  --ion-background-color: var(--primary-color);
+}
+
+.md body {
+  --ion-background-color: var(--primary-color);
+}
+
+a {
+  text-decoration: none;
+  color: var(--tertiary-color);
+}
+
+ion-button {
+  --background: var(--tertiary-color);
+  --color: var(--secondary-color);
+}
+
+ion-input {
+  --background: transparent !important;
+  --color: var(--secondary-color) !important;
+  --highlight-color-focused: var(--secondary-color) !important;
+  --highlight-color-valid: var(--secondary-color) !important;
+}
+
+ion-tab-bar {
+  --background: var(--tertiary-color);
+  --color: var(--primary-color);
+}
+
+ion-tab-button {
+  --color: var(--primary-color);
+  --color-selected: var(--secondary-color);
+}
+
+ion-header {
+  --webkit-box-shadow: 5px 5px var(--tertiary-color) !important;
+  box-shadow: 5px 5px var(--tertiary-color) !important;
+}

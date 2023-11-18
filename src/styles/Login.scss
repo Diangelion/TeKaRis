@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css2?family=Quantico&display=swap");
+
+#LoginPageContainer {
+  .logo,
+  .judul,
+  .text-font {
+    font-family: "Quantico";
+  }
+
+  .logo {
+    font-size: 40px;
+    color: var(--accent-color);
+  }
+
+  .judul {
+    font-size: 30px;
+    color: var(--accent-color);
+    text-align: center;
+  }
+
+  .border-logo {
+    display: flex;
+    flex-direction: column;
+    margin: 25px 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--tertiary-color);
+  }
+
+  .text-font {
+    color: var(--secondary-color);
+  }
+}

@@ -14,7 +14,8 @@ import {
 import React, { useContext, useRef, useState } from "react";
 import { eye, eyeOff } from "ionicons/icons";
 
-import "../styles/Login.css";
+import "../styles/Login.scss";
+import "../styles/Login.scss";
 
 interface LoginDataProps {
   email: string;
@@ -66,24 +67,18 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
-  }
+  };
 
   return (
-    <IonPage>
-      <IonHeader>
+    <IonPage id="LoginPageContainer">
+      <IonContent className="ion-padding">
         <div className="border-logo ion-text-center">
           <IonLabel className="logo">TeKaRis</IonLabel>
-          <IonLabel className="judul">Login</IonLabel>
         </div>
-      </IonHeader>
-
-      {/* <IonContent color="dark" className="ion-text-center"> */}
-      <IonContent className="ion-padding ">
+        <h1 className="judul">Login</h1>
         <IonGrid>
-          <IonRow className="ion-margin-bottom">
+          <IonRow>
             <IonCol>
-              {/* <IonLabel position="floating">Enter your email</IonLabel>
-              <IonInput></IonInput> */}
               <IonInput
                 className={`${isValid && "ion-valid"} ${
                   isValid === false && "ion-invalid"
@@ -105,11 +100,9 @@ const Login: React.FC = () => {
 
           <IonRow>
             <IonCol>
-              {/* <IonLabel position="floating">Enter your password </IonLabel>
-                <IonInput></IonInput> */}
               <IonItem>
                 <IonInput
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   fill="solid"
                   label="Password"
                   labelPlacement="floating"
@@ -118,17 +111,21 @@ const Login: React.FC = () => {
                     handleInputChange(event);
                   }}
                   onIonBlur={() => markTouched()}
-                >
-                </IonInput>
-                <IonIcon slot="end" icon={showPassword ? eye : eyeOff} onClick={toggleShowPassword}/>
+                ></IonInput>
+                <IonIcon
+                  slot="end"
+                  icon={showPassword ? eye : eyeOff}
+                  onClick={toggleShowPassword}
+                />
               </IonItem>
             </IonCol>
           </IonRow>
 
-          <IonRow className="ion-margin-vertical">
+          <IonRow className="ion-margin-vertical ">
             <IonCol>
-              {/* <IonButton onClick={handleLogin}>Login</IonButton> */}
-              <IonButton routerLink="/home">Login</IonButton>
+              <IonButton shape="round" routerLink="/home">
+                Login
+              </IonButton>
             </IonCol>
           </IonRow>
 
@@ -138,13 +135,6 @@ const Login: React.FC = () => {
                 Does not have an account?{" "}
               </IonLabel>
               <a href="/register">Register</a>
-              {/* <IonButton
-                routerLink="/register"
-                className="text-font"
-                fill="clear"
-              >
-                Register
-              </IonButton> */}
             </IonCol>
           </IonRow>
         </IonGrid>
