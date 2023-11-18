@@ -14,7 +14,7 @@ import {
 import React, { useState } from "react";
 import { eye, eyeOff } from "ionicons/icons";
 
-import "../styles/Register.sscss";
+import "../styles/Register.scss";
 
 interface RegisterDataProps {
   name: string;

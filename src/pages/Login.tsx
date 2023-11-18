@@ -15,7 +15,6 @@ import React, { useContext, useRef, useState } from "react";
 import { eye, eyeOff } from "ionicons/icons";
 
 import "../styles/Login.scss";
-import "../styles/Login.scss";
 
 interface LoginDataProps {
   email: string;
@@ -75,10 +74,11 @@ const Login: React.FC = () => {
         <div className="border-logo ion-text-center">
           <IonLabel className="logo">TeKaRis</IonLabel>
         </div>
-        <h1 className="judul">Login</h1>
         <IonGrid>
-          <IonRow>
+          <IonRow className="ion-margin-bottom">
             <IonCol>
+              {/* <IonLabel position="floating">Enter your email</IonLabel>
+              <IonInput></IonInput> */}
               <IonInput
                 className={`${isValid && "ion-valid"} ${
                   isValid === false && "ion-invalid"
@@ -100,24 +100,19 @@ const Login: React.FC = () => {
 
           <IonRow>
             <IonCol>
-              <IonItem>
-                <IonInput
-                  type={showPassword ? "text" : "password"}
-                  fill="solid"
-                  label="Password"
-                  labelPlacement="floating"
-                  helperText="Enter your password"
-                  onIonInput={(event) => {
-                    handleInputChange(event);
-                  }}
-                  onIonBlur={() => markTouched()}
-                ></IonInput>
-                <IonIcon
-                  slot="end"
-                  icon={showPassword ? eye : eyeOff}
-                  onClick={toggleShowPassword}
-                />
-              </IonItem>
+              {/* <IonLabel position="floating">Enter your password </IonLabel>
+                <IonInput></IonInput> */}
+              <IonInput
+                type="password"
+                fill="solid"
+                label="Password"
+                labelPlacement="floating"
+                helperText="Enter your password"
+                onIonInput={(event) => {
+                  handleInputChange(event);
+                }}
+                onIonBlur={() => markTouched()}
+              ></IonInput>
             </IonCol>
           </IonRow>
 
