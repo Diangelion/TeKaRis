@@ -5,11 +5,14 @@ import {
   IonGrid,
   IonHeader,
   IonInput,
+  IonItem,
   IonLabel,
   IonPage,
   IonRow,
+  IonIcon,
 } from "@ionic/react";
 import React, { useState } from "react";
+import { eye, eyeOff } from "ionicons/icons";
 
 import "../styles/Register.css";
 
@@ -84,6 +87,16 @@ const Register: React.FC = () => {
     }
   };
 
+  // Toggle Show Password
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  }
+  const toggleShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -150,25 +163,28 @@ const Register: React.FC = () => {
                 <IonLabel position="floating">Enter your password</IonLabel>
                 <IonInput></IonInput>
               </IonItem> */}
-              <IonInput
-                className={`${isPasswordMatch && "ion-valid"} ${
-                  isPasswordMatch === false && "ion-invalid"
-                } ${isTouched && "ion-touched"}`}
-                type="password"
-                fill="solid"
-                label="Password"
-                labelPlacement="floating"
-                helperText="Enter your password"
-                errorText="Password and Confirmation Password does not match"
-                name="password"
-                // value={registerData.password}
-                onIonInput={(e) => {
-                  handleInputChange(e);
-                  validatePassword(e);
-                }}
-                onIonBlur={() => markTouched()}
-                // onIonChange={(e) => handleInputChange(e)}
-              ></IonInput>
+              <IonItem>
+                <IonInput
+                  className={`${isPasswordMatch && "ion-valid"} ${
+                    isPasswordMatch === false && "ion-invalid"
+                  } ${isTouched && "ion-touched"}`}
+                  type={showPassword ? 'text' : 'password'}
+                  fill="solid"
+                  label="Password"
+                  labelPlacement="floating"
+                  helperText="Enter your password"
+                  errorText="Password and Confirmation Password does not match"
+                  name="password"
+                  // value={registerData.password}
+                  onIonInput={(e) => {
+                    handleInputChange(e);
+                    validatePassword(e);
+                  }}
+                  onIonBlur={() => markTouched()}
+                  // onIonChange={(e) => handleInputChange(e)}
+                ></IonInput>
+                <IonIcon slot="end" icon={showPassword ? eye : eyeOff} onClick={toggleShowPassword}/>
+              </IonItem>
             </IonCol>
           </IonRow>
 
@@ -180,25 +196,28 @@ const Register: React.FC = () => {
                 </IonLabel>
                 <IonInput></IonInput>
               </IonItem> */}
-              <IonInput
-                className={`${isPasswordMatch && "ion-valid"} ${
-                  isPasswordMatch === false && "ion-invalid"
-                } ${isTouched && "ion-touched"}`}
-                type="password"
-                fill="solid"
-                label="Confirmation Password"
-                labelPlacement="floating"
-                helperText="Confirm your password"
-                errorText="Password and Confirmation Password does not match"
-                name="confirmationPassword"
-                // value={registerData.confirmationPassword}
-                onIonInput={(e) => {
-                  handleInputChange(e);
-                  validatePassword(e);
-                }}
-                onIonBlur={() => markTouched()}
-                // onIonChange={(e) => handleInputChange(e)}
-              ></IonInput>
+              <IonItem>
+                <IonInput
+                  className={`${isPasswordMatch && "ion-valid"} ${
+                    isPasswordMatch === false && "ion-invalid"
+                  } ${isTouched && "ion-touched"}`}
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  fill="solid"
+                  label="Confirmation Password"
+                  labelPlacement="floating"
+                  helperText="Confirm your password"
+                  errorText="Password and Confirmation Password does not match"
+                  name="confirmationPassword"
+                  // value={registerData.confirmationPassword}
+                  onIonInput={(e) => {
+                    handleInputChange(e);
+                    validatePassword(e);
+                  }}
+                  onIonBlur={() => markTouched()}
+                  // onIonChange={(e) => handleInputChange(e)}
+                ></IonInput>
+                <IonIcon slot="end" icon={showConfirmPassword ? eye : eyeOff} onClick={toggleShowConfirmPassword}/>
+              </IonItem>
             </IonCol>
           </IonRow>
 

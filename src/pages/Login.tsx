@@ -4,6 +4,7 @@ import {
   IonContent,
   IonGrid,
   IonHeader,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
@@ -11,6 +12,7 @@ import {
   IonRow,
 } from "@ionic/react";
 import React, { useContext, useRef, useState } from "react";
+import { eye, eyeOff } from "ionicons/icons";
 
 import "../styles/Login.css";
 
@@ -60,6 +62,12 @@ const Login: React.FC = () => {
     }
   };
 
+  // Toggle Show Password
+  const [showPassword, setShowPassword] = useState(false);
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -99,17 +107,21 @@ const Login: React.FC = () => {
             <IonCol>
               {/* <IonLabel position="floating">Enter your password </IonLabel>
                 <IonInput></IonInput> */}
-              <IonInput
-                type="password"
-                fill="solid"
-                label="Password"
-                labelPlacement="floating"
-                helperText="Enter your password"
-                onIonInput={(event) => {
-                  handleInputChange(event);
-                }}
-                onIonBlur={() => markTouched()}
-              ></IonInput>
+              <IonItem>
+                <IonInput
+                  type={showPassword ? 'text' : 'password'}
+                  fill="solid"
+                  label="Password"
+                  labelPlacement="floating"
+                  helperText="Enter your password"
+                  onIonInput={(event) => {
+                    handleInputChange(event);
+                  }}
+                  onIonBlur={() => markTouched()}
+                >
+                </IonInput>
+                <IonIcon slot="end" icon={showPassword ? eye : eyeOff} onClick={toggleShowPassword}/>
+              </IonItem>
             </IonCol>
           </IonRow>
 

@@ -18,7 +18,99 @@ import { person } from "ionicons/icons";
 
 import CardLeaderboard from "../components/CardLeaderboard";
 
+interface dataLeaderboard {
+  nama: string,
+  point: string
+}
+
 const Leaderboard: React.FC = () => {
+  const [mode, setMode] = useState<number>(1);
+  const [dataMode1, setDataMode1] = useState<dataLeaderboard[]>([
+    {
+      nama: "John Wick",
+      point: "10,000"
+    },
+    {
+      nama: "John Wick",
+      point: "10,000"
+    },
+    {
+      nama: "John Wick",
+      point: "10,000"
+    },
+    {
+      nama: "John Wick",
+      point: "10,000"
+    },
+    {
+      nama: "John Wick",
+      point: "10,000"
+    },
+    {
+      nama: "John Wick",
+      point: "10,000"
+    },
+    {
+      nama: "John Wick",
+      point: "10,000"
+    },
+    {
+      nama: "John Wick",
+      point: "10,000"
+    },
+    {
+      nama: "John Wick",
+      point: "10,000"
+    },
+    {
+      nama: "John Wick",
+      point: "10,000"
+    },
+  ]);
+
+  const [dataMode2, setDataMode2] = useState<dataLeaderboard[]>([
+    {
+      nama: "John Doe",
+      point: "11,000"
+    },
+    {
+      nama: "John Doe",
+      point: "11,000"
+    },
+    {
+      nama: "John Doe",
+      point: "11,000"
+    },
+    {
+      nama: "John Doe",
+      point: "11,000"
+    },
+    {
+      nama: "John Doe",
+      point: "11,000"
+    },
+    {
+      nama: "John Doe",
+      point: "11,000"
+    },
+    {
+      nama: "John Doe",
+      point: "11,000"
+    },
+    {
+      nama: "John Doe",
+      point: "11,000"
+    },
+    {
+      nama: "John Doe",
+      point: "11,000"
+    },
+    {
+      nama: "John Doe",
+      point: "11,000"
+    },
+  ]);
+
   return (
     <IonPage>
       <IonHeader></IonHeader>

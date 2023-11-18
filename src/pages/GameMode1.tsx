@@ -75,9 +75,87 @@ const GameMode1: React.FC = () => {
     }
   };
 
+  // Yang axel tambah
+  const [englishWord, setEnglishWord] = useState<string>("");
+  const [translatedWord, setTranslatedWord] = useState<string>("");
+  const [bahasaWord1, setBahasaWord1] = useState<string>("");
+  const [bahasaWord2, setBahasaWord2] = useState<string>("");
+  const [answer, setAnswer] = useState<string[]>([]);
+  const [lives, setLives] = useState<number>(3);
+  const [score, setScore] = useState<number>(0);
+
+  const shuffleAnswer = (array: string[]) => {
+    let currentIndex = array.length,  randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex > 0) {
+
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+  }
+
+  const playerAnswer = (answerWord: string) => {
+    if(answerWord == translatedWord) {
+      setScore(score + 100);
+    }
+    else {
+      setLives(lives - 1);
+    }
+    generateWord();
+  }
+
+  const generateWord = () => {
+    // Generate random english word
+    axios.get(randomWordEnglishAPI).then((response) => {
+      setEnglishWord(response.data[0]);
+      // Translate english word
+      const url = `${translateWordAPI}?q=${response.data[0]}&langpair=${translateFrom}|${translateTo}`;
+      axios.get(url).then((response) => {
+        setTranslatedWord(response.data.matches[0].translation);
+      });
+    });
+
+    // Generate random bahasa word 1
+    axios.get(randomWordIndoAPI, {
+      headers: {
+        "X-Api-Key": randomWordIndoAPIKEY
+      }
+    }).then((response) => {
+      setBahasaWord1(response.data.word);
+    });
+
+    // Generate random bahasa word 2
+    axios.get(randomWordIndoAPI, {
+      headers: {
+        "X-Api-Key": randomWordIndoAPIKEY
+      }
+    }).then((response) => {
+        setBahasaWord2(response.data.word);
+    });
+  }
+
   useEffect(() => {
-    getRandomEnglishWord();
+    generateWord();
   }, []);
+
+  // Insert answer to array
+  useEffect(() => {
+    const answerArray = [translatedWord, bahasaWord1, bahasaWord2];
+    setAnswer(shuffleAnswer(answerArray));
+    // setAnswer([translatedWord, bahasaWord1, bahasaWord2]);
+  }, [translatedWord])
+
+  useEffect(() => {
+    console.log(answer);
+  }, [answer]);
 
   return (
     <IonPage>
@@ -94,24 +172,30 @@ const GameMode1: React.FC = () => {
         </div>
         <div className="konten ion-padding">
           <IonLabel className="text-mode">Mode 1</IonLabel>
-          <IonLabel className="soal">HOME</IonLabel>
+          <IonLabel className="text-mode">Score: {score}</IonLabel>
+          <IonLabel className="soal">{englishWord}</IonLabel>
           <div className="box-player">
             <div className="player">
-              <IonLabel className="player-hp">HP: 100</IonLabel>
-              <IonIcon className="player-icon" icon={person} />
-            </div>
-            <div className="player">
-              <IonLabel className="player-hp">HP: 100</IonLabel>
+              <IonLabel className="player-hp">LIVES: {lives}</IonLabel>
               <IonIcon className="player-icon" icon={person} />
             </div>
           </div>
-          <IonItem className="input" color="warning">
+          <div className="box-answer">
+            {answer.map((word) => {
+              return (
+                <IonButton color="warning" className="button-answer" onClick={() => {playerAnswer(word)}}>
+                  {word}
+                </IonButton>
+              )
+            })}
+          </div>
+          {/* <IonItem className="input" color="warning">
             <IonLabel position="floating">INPUT WORD</IonLabel>
             <IonInput></IonInput>
           </IonItem>
           <IonButton color="warning" className="button-attack">
             Attack
-          </IonButton>
+          </IonButton> */}
         </div>
       </IonContent>
     </IonPage>
