@@ -77,7 +77,9 @@ const Login: React.FC = () => {
       const usersCollection = collection(db, "users");
 
       // Query for user with the specified email and password
-      const q = query(usersCollection, where("email", "==", email));
+      const q = query(usersCollection, where("email", "==", email)
+        , where("password", "==", password)
+      );
       const querySnapshot = await getDocs(q);
 
       // Check if there's at least one document in the query result

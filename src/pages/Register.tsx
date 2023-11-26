@@ -98,7 +98,7 @@ const Register: React.FC = () => {
       await addDoc(usersCollection, {
         name: registerData.name,
         email: registerData.email,
-        pasword: registerData.password,
+        password: registerData.password,
       });
       console.log('User registered successfully');
     } catch (err) {
