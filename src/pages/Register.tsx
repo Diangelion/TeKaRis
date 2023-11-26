@@ -13,15 +13,9 @@ import {
 } from "@ionic/react";
 import React, { useState } from "react";
 import { eye, eyeOff } from "ionicons/icons";
+import { useHistory } from "react-router";
 
 import "../styles/Register.scss";
-
-interface RegisterDataProps {
-  name: string;
-  email: string;
-  password: string;
-  confirmationPassword: string;
-}
 
 //import Firebase
 import { collection, addDoc } from "firebase/firestore";
@@ -29,8 +23,14 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useEffect } from "react";
 import { app, auth } from "../firebaseConfig";
+import { AES } from 'crypto-js'; 
 
-const db = getFirestore(app);
+interface RegisterDataProps {
+  name: string;
+  email: string;
+  password: string;
+  confirmationPassword: string;
+}
 
 const Register: React.FC = () => {
   const [registerData, setRegisterData] = useState<RegisterDataProps>({
@@ -42,6 +42,8 @@ const Register: React.FC = () => {
   const [isTouched, setIsTouched] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState<boolean>();
   const [isPasswordMatch, setIsPasswordMatch] = useState<boolean>();
+  // const secretPass = import.meta.env.SECRET_PASS;
+  const secretPass = "kcB7sDfPq09R";
 
   const emailValidation = (email: string) => {
     return email.match(
@@ -89,18 +91,21 @@ const Register: React.FC = () => {
   };
 
   const db = getFirestore(app);
+  const history = useHistory();
 
   const handleRegister = async () => {
-    createUserWithEmailAndPassword(auth, registerData.email, registerData.password)
+    createUserWithEmailAndPassword(auth, registerData.email, registerData.password);
     try {
       // Add user data to Firestore
+      const encryptedPassword = AES.encrypt(registerData.password, secretPass).toString();
       const usersCollection = collection(db, "users");
       await addDoc(usersCollection, {
         name: registerData.name,
         email: registerData.email,
-        password: registerData.password,
+        password: encryptedPassword,
       });
       console.log('User registered successfully');
+      history.push("/login");
     } catch (err) {
       console.error('Error during registration:', err);
     }
@@ -223,9 +228,6 @@ const Register: React.FC = () => {
           <IonRow className="ion-margin-vertical">
             <IonCol>
               {<IonButton onClick={handleRegister}>Register</IonButton>}
-              <IonButton shape="round" routerLink="/home">
-                Register
-              </IonButton>
             </IonCol>
           </IonRow>
 
