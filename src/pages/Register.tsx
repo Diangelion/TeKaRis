@@ -23,6 +23,15 @@ interface RegisterDataProps {
   confirmationPassword: string;
 }
 
+//import Firebase
+import { collection, addDoc } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { useEffect } from "react";
+import { app, auth } from "../firebaseConfig";
+
+const db = getFirestore(app);
+
 const Register: React.FC = () => {
   const [registerData, setRegisterData] = useState<RegisterDataProps>({
     name: "",
@@ -79,11 +88,21 @@ const Register: React.FC = () => {
     }));
   };
 
+  const db = getFirestore(app);
+
   const handleRegister = async () => {
+    createUserWithEmailAndPassword(auth, registerData.email, registerData.password)
     try {
-      console.log(registerData);
+      // Add user data to Firestore
+      const usersCollection = collection(db, "users");
+      await addDoc(usersCollection, {
+        name: registerData.name,
+        email: registerData.email,
+        pasword: registerData.password,
+      });
+      console.log('User registered successfully');
     } catch (err) {
-      console.log(err);
+      console.error('Error during registration:', err);
     }
   };
 
@@ -96,6 +115,7 @@ const Register: React.FC = () => {
   const toggleShowConfirmPassword = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
+  
 
   return (
     <IonPage id="RegisterPageContainer">
@@ -202,7 +222,7 @@ const Register: React.FC = () => {
 
           <IonRow className="ion-margin-vertical">
             <IonCol>
-              {/* <IonButton onClick={handleRegister}>Register</IonButton> */}
+              {<IonButton onClick={handleRegister}>Register</IonButton>}
               <IonButton shape="round" routerLink="/home">
                 Register
               </IonButton>

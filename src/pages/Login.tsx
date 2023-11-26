@@ -16,6 +16,11 @@ import { eye, eyeOff } from "ionicons/icons";
 
 import "../styles/Login.scss";
 
+import { getFirestore } from "firebase/firestore";
+import { app } from "../firebaseConfig";
+import { auth } from "../firebaseConfig";
+import {collection, getDocs, query, where, updateDoc} from "firebase/firestore";
+
 interface LoginDataProps {
   email: string;
   password: string;
@@ -53,12 +58,37 @@ const Login: React.FC = () => {
       [name]: value,
     }));
   };
+  const db = getFirestore(app);
 
   const handleLogin = async () => {
     try {
-      console.log(loginData);
-    } catch (err) {
-      console.log(err);
+      // const { email, password } = loginData;
+      const email  = "Jokowi@gmail.com";
+      const password = "1234567";
+      console.log("Email:" , email)
+      console.log("Password:" , password)
+      // Make sure email and password are provided
+      if (!email || !password) {
+        console.error("Email and password are required for login.");
+        return;
+      }
+
+      // Replace 'users' with the actual name of your Firestore collection
+      const usersCollection = collection(db, "users");
+
+      // Query for user with the specified email and password
+      const q = query(usersCollection, where("email", "==", email));
+      const querySnapshot = await getDocs(q);
+
+      // Check if there's at least one document in the query result
+      if (!querySnapshot.empty) {
+        console.log("Login successful. User data:", querySnapshot.docs[0].data());
+        // Redirect to home or perform other actions after successful login
+      } else {
+        console.log("Login failed. User not found or invalid credentials.");
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
     }
   };
 
@@ -115,7 +145,7 @@ const Login: React.FC = () => {
 
           <IonRow className="ion-margin-vertical ">
             <IonCol>
-              <IonButton shape="round" routerLink="/home">
+              <IonButton shape="round" routerLink="/home" onClick={handleLogin}>
                 Login
               </IonButton>
             </IonCol>
