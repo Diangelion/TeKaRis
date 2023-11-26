@@ -20,7 +20,13 @@ import "../styles/Login.scss";
 import { getFirestore } from "firebase/firestore";
 import { app } from "../firebaseConfig";
 import { auth } from "../firebaseConfig";
-import {collection, getDocs, query, where, updateDoc} from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+} from "firebase/firestore";
 import CryptoJS, { AES } from "crypto-js";
 
 interface LoginDataProps {
@@ -69,7 +75,7 @@ const Login: React.FC = () => {
   const handleLogin = async () => {
     try {
       // const { email, password } = loginData;
-      const email  = loginData.email;
+      const email = loginData.email;
       const password = loginData.password;
       // Make sure email and password are provided
       if (!email || !password) {
@@ -83,18 +89,20 @@ const Login: React.FC = () => {
       const q = query(usersCollection, where("email", "==", email));
 
       const querySnapshot = await getDocs(q);
-      const bytes = AES.decrypt(querySnapshot.docs[0].data().password, secretPass);
+      const bytes = AES.decrypt(
+        querySnapshot.docs[0].data().password,
+        secretPass
+      );
       const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
 
       // Check if there's at least one document in the query result
       if (!querySnapshot.empty && password == decryptedPassword) {
         // console.log("Login successful. User data:", querySnapshot.docs[0].data());
         history.push("/home");
-      // Redirect to home or perform other actions after successful login
+        // Redirect to home or perform other actions after successful login
       } else {
         console.log("Login failed. User not found or invalid credentials.");
       }
-
     } catch (error) {
       console.error("Error during login:", error);
     }
@@ -137,26 +145,24 @@ const Login: React.FC = () => {
           </IonRow>
 
           <IonRow>
-            <IonCol>
-              <IonItem>
-                <IonInput
-                  type={showPassword ? "text" : "password"}
-                  fill="solid"
-                  label="Password"
-                  name="password"
-                  labelPlacement="floating"
-                  helperText="Enter your password"
-                  onIonInput={(event) => {
-                    handleInputChange(event);
-                  }}
-                  onIonBlur={() => markTouched()}
-                ></IonInput>
-                <IonIcon
-                  slot="end"
-                  icon={showPassword ? eye : eyeOff}
-                  onClick={toggleShowPassword}
-                />
-              </IonItem>
+            <IonCol className="inputPasswordField">
+              <IonInput
+                type={showPassword ? "text" : "password"}
+                fill="solid"
+                label="Password"
+                name="password"
+                labelPlacement="floating"
+                helperText="Enter your password"
+                onIonInput={(event) => {
+                  handleInputChange(event);
+                }}
+                onIonBlur={() => markTouched()}
+              ></IonInput>
+              <IonIcon
+                className="eyeIcon"
+                icon={showPassword ? eye : eyeOff}
+                onClick={toggleShowPassword}
+              />
             </IonCol>
           </IonRow>
 

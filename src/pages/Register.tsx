@@ -22,7 +22,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
 import { useEffect } from "react";
 import { app, auth } from "../firebaseConfig";
-import { AES } from 'crypto-js'; 
+import { AES } from "crypto-js";
 
 interface RegisterDataProps {
   name: string;
@@ -95,17 +95,20 @@ const Register: React.FC = () => {
   const handleRegister = async () => {
     try {
       // Add user data to Firestore
-      const encryptedPassword = AES.encrypt(registerData.password, secretPass).toString();
+      const encryptedPassword = AES.encrypt(
+        registerData.password,
+        secretPass
+      ).toString();
       const usersCollection = collection(db, "users");
       await addDoc(usersCollection, {
         name: registerData.name,
         email: registerData.email,
         password: encryptedPassword,
       });
-      console.log('User registered successfully');
+      console.log("User registered successfully");
       history.push("/login");
     } catch (err) {
-      console.error('Error during registration:', err);
+      console.error("Error during registration:", err);
     }
   };
 
@@ -118,7 +121,6 @@ const Register: React.FC = () => {
   const toggleShowConfirmPassword = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
-  
 
   return (
     <IonPage id="RegisterPageContainer">
@@ -166,66 +168,62 @@ const Register: React.FC = () => {
           </IonRow>
 
           <IonRow>
-            <IonCol>
-              <IonItem>
-                <IonInput
-                  className={`${isPasswordMatch && "ion-valid"} ${
-                    isPasswordMatch === false && "ion-invalid"
-                  } ${isTouched && "ion-touched"}`}
-                  type={showPassword ? "text" : "password"}
-                  fill="solid"
-                  label="Password"
-                  labelPlacement="floating"
-                  helperText="Enter your password"
-                  errorText="Password and Confirmation Password does not match"
-                  name="password"
-                  onIonInput={(e) => {
-                    handleInputChange(e);
-                    validatePassword(e);
-                  }}
-                  onIonBlur={() => markTouched()}
-                ></IonInput>
-                <IonIcon
-                  slot="end"
-                  icon={showPassword ? eye : eyeOff}
-                  onClick={toggleShowPassword}
-                />
-              </IonItem>
+            <IonCol className="inputPasswordField">
+              <IonInput
+                className={`${isPasswordMatch && "ion-valid"} ${
+                  isPasswordMatch === false && "ion-invalid"
+                } ${isTouched && "ion-touched"}`}
+                type={showPassword ? "text" : "password"}
+                fill="solid"
+                label="Password"
+                labelPlacement="floating"
+                helperText="Enter your password"
+                errorText="Password and Confirmation Password does not match"
+                name="password"
+                onIonInput={(e) => {
+                  handleInputChange(e);
+                  validatePassword(e);
+                }}
+                onIonBlur={() => markTouched()}
+              ></IonInput>
+              <IonIcon
+                className="eyeIcon"
+                icon={showPassword ? eye : eyeOff}
+                onClick={toggleShowPassword}
+              />
             </IonCol>
           </IonRow>
 
           <IonRow>
-            <IonCol>
-              <IonItem>
-                <IonInput
-                  className={`${isPasswordMatch && "ion-valid"} ${
-                    isPasswordMatch === false && "ion-invalid"
-                  } ${isTouched && "ion-touched"}`}
-                  type={showConfirmPassword ? "text" : "password"}
-                  fill="solid"
-                  label="Confirmation Password"
-                  labelPlacement="floating"
-                  helperText="Confirm your password"
-                  errorText="Password and Confirmation Password does not match"
-                  name="confirmationPassword"
-                  onIonInput={(e) => {
-                    handleInputChange(e);
-                    validatePassword(e);
-                  }}
-                  onIonBlur={() => markTouched()}
-                ></IonInput>
-                <IonIcon
-                  slot="end"
-                  icon={showConfirmPassword ? eye : eyeOff}
-                  onClick={toggleShowConfirmPassword}
-                />
-              </IonItem>
+            <IonCol className="inputPasswordField">
+              <IonInput
+                className={`${isPasswordMatch && "ion-valid"} ${
+                  isPasswordMatch === false && "ion-invalid"
+                } ${isTouched && "ion-touched"}`}
+                type={showConfirmPassword ? "text" : "password"}
+                fill="solid"
+                label="Confirmation Password"
+                labelPlacement="floating"
+                helperText="Confirm your password"
+                errorText="Password and Confirmation Password does not match"
+                name="confirmationPassword"
+                onIonInput={(e) => {
+                  handleInputChange(e);
+                  validatePassword(e);
+                }}
+                onIonBlur={() => markTouched()}
+              ></IonInput>
+              <IonIcon
+                className="eyeIcon"
+                icon={showConfirmPassword ? eye : eyeOff}
+                onClick={toggleShowConfirmPassword}
+              />
             </IonCol>
           </IonRow>
 
           <IonRow className="ion-margin-vertical">
             <IonCol>
-              {<IonButton onClick={handleRegister}>Register</IonButton>}
+              <IonButton onClick={handleRegister}>Register</IonButton>
             </IonCol>
           </IonRow>
 
