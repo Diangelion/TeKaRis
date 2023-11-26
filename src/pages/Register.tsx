@@ -20,7 +20,6 @@ import "../styles/Register.scss";
 //import Firebase
 import { collection, addDoc } from "firebase/firestore";
 import { getFirestore } from "firebase/firestore";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useEffect } from "react";
 import { app, auth } from "../firebaseConfig";
 import { AES } from 'crypto-js'; 
@@ -94,7 +93,6 @@ const Register: React.FC = () => {
   const history = useHistory();
 
   const handleRegister = async () => {
-    createUserWithEmailAndPassword(auth, registerData.email, registerData.password);
     try {
       // Add user data to Firestore
       const encryptedPassword = AES.encrypt(registerData.password, secretPass).toString();
