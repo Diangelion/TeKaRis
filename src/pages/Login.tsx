@@ -10,6 +10,7 @@ import {
   IonLabel,
   IonPage,
   IonRow,
+  IonToast,
 } from "@ionic/react";
 import React, { useContext, useRef, useState } from "react";
 import { eye, eyeOff } from "ionicons/icons";
@@ -43,6 +44,9 @@ const Login: React.FC = () => {
   const [isValid, setIsValid] = useState<boolean>();
   // const secretPass = import.meta.env.SECRET_PASS;
   const secretPass = "kcB7sDfPq09R";
+  
+  // Toast Message
+  const [toastWishlistMessage, setToastWishlistMessage] = useState('');
 
   const validateEmail = (email: string) => {
     return email.match(
@@ -80,6 +84,7 @@ const Login: React.FC = () => {
       // Make sure email and password are provided
       if (!email || !password) {
         console.error("Email and password are required for login.");
+        setToastWishlistMessage("Email and password are required for login!");
         return;
       }
 
@@ -115,76 +120,83 @@ const Login: React.FC = () => {
   };
 
   return (
-    <IonPage id="LoginPageContainer">
-      <IonContent className="ion-padding">
-        <div className="border-logo ion-text-center">
-          <IonLabel className="logo">TeKaRis</IonLabel>
-        </div>
-        <h1 className="judul">Login</h1>
-        <IonGrid>
-          <IonRow>
-            <IonCol>
-              <IonInput
-                className={`${isValid && "ion-valid"} ${
-                  isValid === false && "ion-invalid"
-                } ${isTouched && "ion-touched"}`}
-                type="email"
-                fill="solid"
-                label="Email"
-                name="email"
-                labelPlacement="floating"
-                helperText="Enter a valid email"
-                errorText="Invalid email"
-                onIonInput={(event) => {
-                  validate(event);
-                  handleInputChange(event);
-                }}
-                onIonBlur={() => markTouched()}
-              ></IonInput>
-            </IonCol>
-          </IonRow>
+    <>
+      <IonToast
+      isOpen={!!toastWishlistMessage}
+      message={toastWishlistMessage}
+      duration={2000}
+      onDidDismiss={() => {setToastWishlistMessage('')}} />
+      <IonPage id="LoginPageContainer">
+        <IonContent className="ion-padding">
+          <div className="border-logo ion-text-center">
+            <IonLabel className="logo">TeKaRis</IonLabel>
+          </div>
+          <h1 className="judul">Login</h1>
+          <IonGrid>
+            <IonRow>
+              <IonCol>
+                <IonInput
+                  className={`${isValid && "ion-valid"} ${
+                    isValid === false && "ion-invalid"
+                  } ${isTouched && "ion-touched"}`}
+                  type="email"
+                  fill="solid"
+                  label="Email"
+                  name="email"
+                  labelPlacement="floating"
+                  helperText="Enter a valid email"
+                  errorText="Invalid email"
+                  onIonInput={(event) => {
+                    validate(event);
+                    handleInputChange(event);
+                  }}
+                  onIonBlur={() => markTouched()}
+                ></IonInput>
+              </IonCol>
+            </IonRow>
 
-          <IonRow>
-            <IonCol className="inputPasswordField">
-              <IonInput
-                type={showPassword ? "text" : "password"}
-                fill="solid"
-                label="Password"
-                name="password"
-                labelPlacement="floating"
-                helperText="Enter your password"
-                onIonInput={(event) => {
-                  handleInputChange(event);
-                }}
-                onIonBlur={() => markTouched()}
-              ></IonInput>
-              <IonIcon
-                className="eyeIcon"
-                icon={showPassword ? eye : eyeOff}
-                onClick={toggleShowPassword}
-              />
-            </IonCol>
-          </IonRow>
+            <IonRow>
+              <IonCol className="inputPasswordField">
+                <IonInput
+                  type={showPassword ? "text" : "password"}
+                  fill="solid"
+                  label="Password"
+                  name="password"
+                  labelPlacement="floating"
+                  helperText="Enter your password"
+                  onIonInput={(event) => {
+                    handleInputChange(event);
+                  }}
+                  onIonBlur={() => markTouched()}
+                ></IonInput>
+                <IonIcon
+                  className="eyeIcon"
+                  icon={showPassword ? eye : eyeOff}
+                  onClick={toggleShowPassword}
+                />
+              </IonCol>
+            </IonRow>
 
-          <IonRow className="ion-margin-vertical ">
-            <IonCol>
-              <IonButton shape="round" onClick={handleLogin}>
-                Login
-              </IonButton>
-            </IonCol>
-          </IonRow>
+            <IonRow className="ion-margin-vertical ">
+              <IonCol>
+                <IonButton shape="round" onClick={handleLogin}>
+                  Login
+                </IonButton>
+              </IonCol>
+            </IonRow>
 
-          <IonRow>
-            <IonCol>
-              <IonLabel className="text-font">
-                Does not have an account?{" "}
-              </IonLabel>
-              <a href="/register">Register</a>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
-      </IonContent>
-    </IonPage>
+            <IonRow>
+              <IonCol>
+                <IonLabel className="text-font">
+                  Does not have an account?{" "}
+                </IonLabel>
+                <a href="/register">Register</a>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        </IonContent>
+      </IonPage>
+    </>
   );
 };
 

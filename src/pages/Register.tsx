@@ -10,6 +10,7 @@ import {
   IonPage,
   IonRow,
   IonIcon,
+  IonToast,
 } from "@ionic/react";
 import React, { useState } from "react";
 import { eye, eyeOff } from "ionicons/icons";
@@ -43,6 +44,9 @@ const Register: React.FC = () => {
   const [isPasswordMatch, setIsPasswordMatch] = useState<boolean>();
   // const secretPass = import.meta.env.SECRET_PASS;
   const secretPass = "kcB7sDfPq09R";
+
+  // Toast Message
+  const [toastWishlistMessage, setToastWishlistMessage] = useState('');
 
   const emailValidation = (email: string) => {
     return email.match(
@@ -94,6 +98,17 @@ const Register: React.FC = () => {
 
   const handleRegister = async () => {
     try {
+      if (!registerData.email || !registerData.name || !registerData.password || !registerData.confirmationPassword) {
+        console.error("Please fill the form before register!");
+        setToastWishlistMessage("Please fill the form before register!");
+        return;
+      }
+      else if(registerData.password != registerData.confirmationPassword) {
+        console.error("Password must be same with confirm password!");
+        setToastWishlistMessage("Password must be same with confirm password!");
+        return;
+      }
+
       // Add user data to Firestore
       const encryptedPassword = AES.encrypt(
         registerData.password,
@@ -123,121 +138,128 @@ const Register: React.FC = () => {
   };
 
   return (
-    <IonPage id="RegisterPageContainer">
-      <IonContent className="ion-padding">
-        <div className="border-logo ion-text-center">
-          <IonLabel className="logo">TeKaRis</IonLabel>
-        </div>
-        <h1 className="judul">Register</h1>
-        <IonGrid>
-          <IonRow>
-            <IonCol>
-              <IonInput
-                type="text"
-                fill="solid"
-                label="Name"
-                labelPlacement="floating"
-                helperText="Enter your name"
-                name="name"
-                onIonBlur={() => markTouched()}
-                onIonInput={(e) => handleInputChange(e)}
-              ></IonInput>
-            </IonCol>
-          </IonRow>
+    <>
+      <IonToast
+      isOpen={!!toastWishlistMessage}
+      message={toastWishlistMessage}
+      duration={2000}
+      onDidDismiss={() => {setToastWishlistMessage('')}} />
+      <IonPage id="RegisterPageContainer">
+        <IonContent className="ion-padding">
+          <div className="border-logo ion-text-center">
+            <IonLabel className="logo">TeKaRis</IonLabel>
+          </div>
+          <h1 className="judul">Register</h1>
+          <IonGrid>
+            <IonRow>
+              <IonCol>
+                <IonInput
+                  type="text"
+                  fill="solid"
+                  label="Name"
+                  labelPlacement="floating"
+                  helperText="Enter your name"
+                  name="name"
+                  onIonBlur={() => markTouched()}
+                  onIonInput={(e) => handleInputChange(e)}
+                ></IonInput>
+              </IonCol>
+            </IonRow>
 
-          <IonRow>
-            <IonCol>
-              <IonInput
-                className={`${isValidEmail && "ion-valid"} ${
-                  isValidEmail === false && "ion-invalid"
-                } ${isTouched && "ion-touched"}`}
-                type="email"
-                fill="solid"
-                label="Email"
-                labelPlacement="floating"
-                helperText="Enter a valid email"
-                errorText="Invalid email"
-                name="email"
-                onIonInput={(e) => {
-                  validateEmail(e);
-                  handleInputChange(e);
-                }}
-                onIonBlur={() => markTouched()}
-              ></IonInput>
-            </IonCol>
-          </IonRow>
+            <IonRow>
+              <IonCol>
+                <IonInput
+                  className={`${isValidEmail && "ion-valid"} ${
+                    isValidEmail === false && "ion-invalid"
+                  } ${isTouched && "ion-touched"}`}
+                  type="email"
+                  fill="solid"
+                  label="Email"
+                  labelPlacement="floating"
+                  helperText="Enter a valid email"
+                  errorText="Invalid email"
+                  name="email"
+                  onIonInput={(e) => {
+                    validateEmail(e);
+                    handleInputChange(e);
+                  }}
+                  onIonBlur={() => markTouched()}
+                ></IonInput>
+              </IonCol>
+            </IonRow>
 
-          <IonRow>
-            <IonCol className="inputPasswordField">
-              <IonInput
-                className={`${isPasswordMatch && "ion-valid"} ${
-                  isPasswordMatch === false && "ion-invalid"
-                } ${isTouched && "ion-touched"}`}
-                type={showPassword ? "text" : "password"}
-                fill="solid"
-                label="Password"
-                labelPlacement="floating"
-                helperText="Enter your password"
-                errorText="Password and Confirmation Password does not match"
-                name="password"
-                onIonInput={(e) => {
-                  handleInputChange(e);
-                  validatePassword(e);
-                }}
-                onIonBlur={() => markTouched()}
-              ></IonInput>
-              <IonIcon
-                className="eyeIcon"
-                icon={showPassword ? eye : eyeOff}
-                onClick={toggleShowPassword}
-              />
-            </IonCol>
-          </IonRow>
+            <IonRow>
+              <IonCol className="inputPasswordField">
+                <IonInput
+                  className={`${isPasswordMatch && "ion-valid"} ${
+                    isPasswordMatch === false && "ion-invalid"
+                  } ${isTouched && "ion-touched"}`}
+                  type={showPassword ? "text" : "password"}
+                  fill="solid"
+                  label="Password"
+                  labelPlacement="floating"
+                  helperText="Enter your password"
+                  errorText="Password and Confirmation Password does not match"
+                  name="password"
+                  onIonInput={(e) => {
+                    handleInputChange(e);
+                    validatePassword(e);
+                  }}
+                  onIonBlur={() => markTouched()}
+                ></IonInput>
+                <IonIcon
+                  className="eyeIcon"
+                  icon={showPassword ? eye : eyeOff}
+                  onClick={toggleShowPassword}
+                />
+              </IonCol>
+            </IonRow>
 
-          <IonRow>
-            <IonCol className="inputPasswordField">
-              <IonInput
-                className={`${isPasswordMatch && "ion-valid"} ${
-                  isPasswordMatch === false && "ion-invalid"
-                } ${isTouched && "ion-touched"}`}
-                type={showConfirmPassword ? "text" : "password"}
-                fill="solid"
-                label="Confirmation Password"
-                labelPlacement="floating"
-                helperText="Confirm your password"
-                errorText="Password and Confirmation Password does not match"
-                name="confirmationPassword"
-                onIonInput={(e) => {
-                  handleInputChange(e);
-                  validatePassword(e);
-                }}
-                onIonBlur={() => markTouched()}
-              ></IonInput>
-              <IonIcon
-                className="eyeIcon"
-                icon={showConfirmPassword ? eye : eyeOff}
-                onClick={toggleShowConfirmPassword}
-              />
-            </IonCol>
-          </IonRow>
+            <IonRow>
+              <IonCol className="inputPasswordField">
+                <IonInput
+                  className={`${isPasswordMatch && "ion-valid"} ${
+                    isPasswordMatch === false && "ion-invalid"
+                  } ${isTouched && "ion-touched"}`}
+                  type={showConfirmPassword ? "text" : "password"}
+                  fill="solid"
+                  label="Confirmation Password"
+                  labelPlacement="floating"
+                  helperText="Confirm your password"
+                  errorText="Password and Confirmation Password does not match"
+                  name="confirmationPassword"
+                  onIonInput={(e) => {
+                    handleInputChange(e);
+                    validatePassword(e);
+                  }}
+                  onIonBlur={() => markTouched()}
+                ></IonInput>
+                <IonIcon
+                  className="eyeIcon"
+                  icon={showConfirmPassword ? eye : eyeOff}
+                  onClick={toggleShowConfirmPassword}
+                />
+              </IonCol>
+            </IonRow>
 
-          <IonRow className="ion-margin-vertical">
-            <IonCol>
-              <IonButton onClick={handleRegister}>Register</IonButton>
-            </IonCol>
-          </IonRow>
+            <IonRow className="ion-margin-vertical">
+              <IonCol>
+                <IonButton onClick={handleRegister}>Register</IonButton>
+              </IonCol>
+            </IonRow>
 
-          <IonRow>
-            <IonCol>
-              <IonLabel className="text-font">
-                Already have an account?{" "}
-              </IonLabel>
-              <a href="/login">Login</a>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
-      </IonContent>
-    </IonPage>
+            <IonRow>
+              <IonCol>
+                <IonLabel className="text-font">
+                  Already have an account?{" "}
+                </IonLabel>
+                <a href="/login">Login</a>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        </IonContent>
+      </IonPage>
+    </>
   );
 };
 
