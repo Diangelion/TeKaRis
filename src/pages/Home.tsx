@@ -32,7 +32,7 @@ const Home: React.FC = () => {
             <IonLabel className="label-button ion-padding">Mode 1</IonLabel>
           </IonButton>
 
-          <IonButton className="play-button" shape="round">
+          <IonButton className="play-button" shape="round"routerLink="/mode2">
             <IonLabel className="label-button ion-padding">Mode 2</IonLabel>
           </IonButton>
         </div>

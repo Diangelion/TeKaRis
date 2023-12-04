@@ -41,6 +41,7 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Leaderboard from "./pages/Leaderboard";
 import GameMode1 from "./pages/GameMode1";
+import GameMode2 from "./pages/GameMode2";
 
 // Icon
 import { podium, home } from "ionicons/icons";
@@ -57,6 +58,7 @@ const App: React.FC = () => {
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/leaderboard" component={Leaderboard} />
             <Route exact path="/mode1" component={GameMode1} />
+            <Route exact path="/mode2" component={GameMode2} />
             <Redirect exact from="/" to="/login" />
           </IonRouterOutlet>
 
