@@ -4,15 +4,34 @@ interface ContextProviderProps {
   children: ReactNode;
 }
 
-interface TeKaRisContextType {
-  auth: any;
-  setAuth: React.Dispatch<React.SetStateAction<any>>;
+export interface TeKaRisContextType {
+  auth: AuthProps | null;
+  setAuth: React.Dispatch<React.SetStateAction<AuthProps | null>>;
 }
 
-const AuthContext = createContext<TeKaRisContextType | undefined>(undefined);
+export interface AuthProps {
+  uid: string;
+  email: string;
+  token: TokenData;
+}
+
+interface TokenData {
+  accessToken: string;
+  expirationTime: number;
+  refreshToken: string;
+}
+
+const AuthContext = createContext<TeKaRisContextType | null>({
+  auth: null,
+  setAuth: () => {},
+});
 
 const ContextProvider = ({ children }: ContextProviderProps) => {
-  const [auth, setAuth] = useState<any>(/* initial value for auth */);
+  // Define state menggunakan lazy loading, mengecek localstorage apakah session ada atau tidak
+  const [auth, setAuth] = useState<AuthProps | null>(() => {
+    const storedAuth = localStorage.getItem("auth");
+    return storedAuth ? JSON.parse(storedAuth) : null;
+  });
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

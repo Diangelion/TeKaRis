@@ -1,13 +1,20 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { get } from "./services/api/axios/axiosClient";
-import { getAuth } from "firebase/auth";
+import { getFirestore, addDoc, collection } from "firebase/firestore";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
+} from "firebase/auth";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
 const firebaseConfig = {
   apiKey: "AIzaSyDgXt8gYfPgGHoYTjNgkgUpMp6S5thGgoE",
   authDomain: "tekaris-32613.firebaseapp.com",
@@ -15,55 +22,94 @@ const firebaseConfig = {
   storageBucket: "tekaris-32613.appspot.com",
   messagingSenderId: "1069840624907",
   appId: "1:1069840624907:web:52df30cc8a8bf97b6d060e",
-  measurementId: "G-6LZ1NMNSGZ"
+  measurementId: "G-6LZ1NMNSGZ",
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-export const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-//Implementasi
-// import {collection, addDoc, getDocs, query, where, updateDoc} from "firebase/firestore";
-// import { getFirestore } from "firebase/firestore";
-// import { useEffect } from "react";
-// import { app } from "../firebaseConfig";
-// const db = getFirestore(app);
-// const addData = async () => {
-//     try{
-//         const docRef = await addDoc(collection(db, "users"), {
-//             first: "Ada",
-//             last: "Lovelace",
-//             born: 1815,
-//             score: 0
-//         });
-//     } catch (e) {
-//         console.error("Error adding document: ", e);
-//     }
-// }
-// const updateData = async () => {
-//   try {
-//     const usersCollectionRef = collection(db, "users");
+// Function untuk menampilkan error message berdasarkan kode
+const getFirebaseErrorMessage = (code: string) => {
+  const errorMessages = {
+    "auth/email-already-in-use": "Email sudah terdaftar.",
+    "auth/invalid-email": "Email tidak valid.",
+    "auth/weak-password": "Kata sandi terlalu lemah.",
+    "auth/invalid-login-credentials": "Email atau password salah.",
+  } as any;
 
-//     // Query for users with the specified first name ("Ada")
-//     const querySnapshot = await getDocs(query(usersCollectionRef, where("first", "==", "Ada")));
+  if (errorMessages.hasOwnProperty(code)) {
+    return errorMessages[code];
+  }
 
-//     // Check if there's at least one document in the query result
-//     if (!querySnapshot.empty) {
-//       // Assuming you want to update the first matching document
-//       const userDoc = querySnapshot.docs[0];
+  // Pesan default jika kode error tidak ditemukan
+  return "Terjadi kesalahan pada Firebase.";
+};
 
-//       // Use the updateDoc method to update the document with new data
-//       await updateDoc(userDoc.ref, {
-//         born: 1815,
-//         score: 100 // Update the 'score' field to a new value
-//       });
+// Function untuk handling error message dari response code yang didapat dari firebase
+const handleAuthError = (err: any) => ({
+  isRegistered: false,
+  error: getFirebaseErrorMessage(err.code),
+});
 
-//       console.log("Document successfully updated!");
-//     } else {
-//       console.log("No user with the specified first name found.");
-//     }
-//   } catch (e) {
-//     console.error("Error updating document: ", e);
-//   }
-// };
+// Function untuk login
+const logInWithEmailAndPassword = async (email: string, password: string) => {
+  try {
+    const res = await signInWithEmailAndPassword(auth, email, password);
+    return {
+      isLogged: true,
+      data: res,
+    };
+  } catch (err) {
+    return handleAuthError(err);
+  }
+};
+
+// Function untuk register
+const registerWithEmailAndPassword = async (
+  name: string,
+  email: string,
+  password: string
+) => {
+  try {
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const user = res.user;
+    const res2 = await addDoc(collection(db, "users"), {
+      uid: user.uid,
+      name,
+      authProvider: "local",
+      email,
+    });
+    return {
+      isRegistered: true,
+      data: res2,
+    };
+  } catch (err) {
+    return handleAuthError(err);
+  }
+};
+
+// Function untuk mengirimkan reset password ke email pengguna
+const sendPasswordReset = async (email: string) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// Function untuk logout
+const logout = () => {
+  signOut(auth);
+};
+
+// Export variable and function
+export {
+  auth,
+  db,
+  logInWithEmailAndPassword,
+  registerWithEmailAndPassword,
+  sendPasswordReset,
+  logout,
+};

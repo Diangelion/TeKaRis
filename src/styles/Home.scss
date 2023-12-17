@@ -1,34 +1,79 @@
 @import url("https://fonts.googleapis.com/css2?family=Quantico&display=swap");
 
 #HomePageContainer {
-  .box-header {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px;
-    color: var(--accent-color);
-  }
+  // .box-header {
+  //   display: flex;
+  //   justify-content: space-between;
+  //   padding: 20px;
+  //   color: var(--accent-color);
+  // }
 
-  .box-judul {
-    display: flex;
-    flex-direction: column;
-    font-size: 24px;
-    font-family: "Quantico";
-  }
+  // .box-judul {
+  //   display: flex;
+  //   flex-direction: column;
+  //   font-size: 24px;
+  //   font-family: "Quantico";
+  // }
 
   .box-mode {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    row-gap: 100px;
+    // display: flex;
+    // flex-direction: column
+    // justify-content: center;
+    // row-gap: 100px;
     height: 100%;
   }
 
-  .label-button {
-    font-size: 30px;
-    font-family: "Quantico";
+  // .label-button {
+  //   font-size: 30px;
+  //   font-family: "Quantico";
+  // }
+
+  // .play-button {
+  //   height: 150px;
+  // }
+
+  .logo-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40%;
+
+    h1 {
+      font-size: 5rem !important;
+    }
   }
 
-  .play-button {
-    height: 150px;
+  .options-section {
+    height: 55%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
   }
+}
+
+.modal-title-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40%;
+
+  h1 {
+    font-size: 3rem !important;
+    text-align: center;
+  }
+}
+
+.modal-content {
+  height: 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+  gap: 10px;
+}
+
+.option-ion-button {
+  width: 200px;
 }

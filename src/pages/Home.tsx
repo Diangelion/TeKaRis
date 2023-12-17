@@ -1,41 +1,59 @@
-import {
-  IonButton,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonLabel,
-  IonPage,
-} from "@ionic/react";
-import React, { useContext, useRef, useState } from "react";
-import { person } from "ionicons/icons";
+import { IonButton, IonContent, IonPage, IonModal } from "@ionic/react";
+import React, { useRef } from "react";
 
 import "../styles/Home.scss";
 
 const Home: React.FC = () => {
+  const modal = useRef<HTMLIonModalElement>(null);
+
   return (
     <IonPage id="HomePageContainer">
-      <IonHeader>
-        <div className="box-header">
-          <div className="box-judul">
-            <IonLabel>Hello</IonLabel>
-            <IonLabel>Bryan Richie!</IonLabel>
-          </div>
-          <IonButton color="tertiary" routerLink="/profile">
-            <IonIcon icon={person} />
-          </IonButton>
+      <IonContent className="ion-padding">
+        <div className="logo-section">
+          <h1>TeKaRis</h1>
         </div>
-      </IonHeader>
 
-      <IonContent>
-        <div className="box-mode ion-padding">
-          <IonButton className="play-button" shape="round" routerLink="/mode1">
-            <IonLabel className="label-button ion-padding">Mode 1</IonLabel>
+        <div className="options-section">
+          <IonButton className="option-ion-button" id="open-modal">
+            Play Game
           </IonButton>
-
-          <IonButton className="play-button" shape="round"routerLink="/mode2">
-            <IonLabel className="label-button ion-padding">Mode 2</IonLabel>
+          <IonButton className="option-ion-button">Leaderboard</IonButton>
+          <IonButton className="option-ion-button" routerLink="/profile">
+            Profile
           </IonButton>
+          <IonButton className="option-ion-button">Exit</IonButton>
         </div>
+
+        <IonModal ref={modal} trigger="open-modal">
+          <IonContent className="ion-padding">
+            <div className="modal-title-section">
+              <h1>Select Game Mode</h1>
+            </div>
+
+            <div className="modal-content">
+              <IonButton
+                className="option-ion-button"
+                routerLink="/translate-rift"
+                onClick={() => modal.current?.dismiss()}
+              >
+                Translate Rift
+              </IonButton>
+              <IonButton
+                className="option-ion-button"
+                routerLink="/blank-craft"
+                onClick={() => modal.current?.dismiss()}
+              >
+                Blank Craft
+              </IonButton>
+              <IonButton
+                className="option-ion-button"
+                onClick={() => modal.current?.dismiss()}
+              >
+                Back
+              </IonButton>
+            </div>
+          </IonContent>
+        </IonModal>
       </IonContent>
     </IonPage>
   );

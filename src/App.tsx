@@ -1,16 +1,8 @@
-import React from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import {
-  IonApp,
-  IonRouterOutlet,
-  IonTabs,
-  IonTabButton,
-  IonIcon,
-  IonLabel,
-  setupIonicReact,
-  IonTabBar,
-} from "@ionic/react";
+import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
+import { useHistory } from "react-router";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -40,46 +32,27 @@ import Register from "./pages/Register";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Leaderboard from "./pages/Leaderboard";
-import GameMode1 from "./pages/GameMode1";
-import GameMode2 from "./pages/GameMode2";
-
-// Icon
-import { podium, home } from "ionicons/icons";
+import TranslateRift from "./pages/TranslateRift";
+import BlankCraft from "./pages/BlankCraft";
+import RedirectRoute from "./route/RedirectRoute";
 
 setupIonicReact();
 
+// Define routing di App
 const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        <IonTabs>
-          <IonRouterOutlet>
-            <Route exact path="/home" component={Home} />
-            <Route exact path="/profile" component={Profile} />
-            <Route exact path="/leaderboard" component={Leaderboard} />
-            <Route exact path="/mode1" component={GameMode1} />
-            <Route exact path="/mode2" component={GameMode2} />
-            <Redirect exact from="/" to="/login" />
-          </IonRouterOutlet>
-
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="home" href="/home">
-              <IonIcon icon={home} />
-              <IonLabel>Home</IonLabel>
-            </IonTabButton>
-
-            <IonTabButton tab="radio" href="/leaderboard">
-              <IonIcon icon={podium} />
-              <IonLabel>Leaderboard</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
-
-        {/* Create a separate route structure for login and register */}
-        <Switch>
+        <IonRouterOutlet>
+          <Route exact path="/" component={RedirectRoute} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
-        </Switch>
+          <Route exact path="/home" component={Home} />
+          <Route exact path="/profile" component={Profile} />
+          <Route exact path="/leaderboard" component={Leaderboard} />
+          <Route exact path="/translate-rift" component={TranslateRift} />
+          <Route exact path="/blank-craft" component={BlankCraft} />
+        </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>
   );

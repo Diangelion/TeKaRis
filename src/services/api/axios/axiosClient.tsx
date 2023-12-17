@@ -1,16 +1,12 @@
 import axios from "axios";
 
 export const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_BASEURL,
-  timeout: 10000,
   headers: {
     "Content-type": "application/json",
   },
 });
 
 export const axiosClientFile = axios.create({
-  baseURL: import.meta.env.VITE_RANDOM_INDO_WORD_URL,
-  timeout: 10000,
   headers: {
     "Content-Type": "multipart/form-data",
   },
