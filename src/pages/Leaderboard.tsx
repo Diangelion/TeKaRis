@@ -20,6 +20,9 @@ import CardLeaderboard from "../components/CardLeaderboard";
 
 import "../styles/Leaderboard.css";
 
+//firebase
+import { db, getTopScores } from "../firebaseConfig";
+
 interface dataLeaderboard {
   nama: string,
   point: string

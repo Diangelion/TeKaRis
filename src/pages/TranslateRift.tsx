@@ -24,6 +24,9 @@ import { arrowBackCircle } from "ionicons/icons";
 // Style
 import "../styles/GameMode.scss";
 
+//firebase
+import { updateScoreInFirebase } from "../firebaseConfig";
+
 // Asset
 
 const TranslateRift: React.FC = () => {
@@ -47,6 +50,11 @@ const TranslateRift: React.FC = () => {
   const [showAlertDie, setShowAlertDie] = useState<boolean>(false);
   const [alertHeader, setAlertHeader] = useState<string>("");
   const [alertMessage, setAlertMessage] = useState<string>("");
+
+  //ngambil uid user dari local storage
+  const storedUserUid = localStorage.getItem('userUid');
+
+  console.log(storedUserUid);
 
   // Function untuk generate random english word sebagai kata yang akan ditebak
   const generateWord = async () => {
@@ -111,17 +119,18 @@ const TranslateRift: React.FC = () => {
   };
 
   // Function untuk pencocokan apakah kata translate yang dipilih user benar/salah
-  const playerAnswer = (choice: string) => {
+  const playerAnswer = (choice: string, user: { uid: string }) => {
     let isPlayerAlive = true;
     if (choice == keyAnswer) {
       // Jika benar melakukan penambahan score sebanyak 100
-      setScore(score + 100);
+      setScore(prevScore => prevScore + 150);
     } else {
       // Jika salah akan mengurangi 1 hp (hp awal sebanyak 3)
       setHp((prevHp) => {
         const newHp = prevHp - 1;
         if (newHp === 0) {
           isPlayerAlive = false;
+          updateScoreInFirebase(user.uid, score);
           setWordShown("");
           setKeyAnswer("");
           setAnswerChoice([]);
@@ -212,7 +221,9 @@ const TranslateRift: React.FC = () => {
                         key={i}
                         className="choice-ion-button"
                         onClick={() => {
-                          playerAnswer(choice);
+                          if (storedUserUid !== null) {
+                            playerAnswer(choice, { uid: storedUserUid });
+                          }
                         }}
                       >
                         {choice}
