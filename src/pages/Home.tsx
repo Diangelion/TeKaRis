@@ -17,7 +17,9 @@ const Home: React.FC = () => {
           <IonButton className="option-ion-button" id="open-modal">
             Play Game
           </IonButton>
-          <IonButton className="option-ion-button">Leaderboard</IonButton>
+          <IonButton className="option-ion-button" routerLink="/leaderboard">
+            Leaderboard
+          </IonButton>
           <IonButton className="option-ion-button" routerLink="/profile">
             Profile
           </IonButton>

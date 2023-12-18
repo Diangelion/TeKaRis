@@ -24,8 +24,8 @@ import { arrowBackCircle } from "ionicons/icons";
 // Style
 import "../styles/GameMode.scss";
 
-//firebase
-import { updateScoreInFirebase } from "../firebaseConfig";
+// Firebase
+import { updateHighestTranslateRiftInFirebase } from "../firebaseConfig";
 
 // Asset
 
@@ -52,7 +52,7 @@ const TranslateRift: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string>("");
 
   //ngambil uid user dari local storage
-  const storedUserUid = localStorage.getItem('userUid');
+  const storedUserUid = localStorage.getItem("userUid");
 
   console.log(storedUserUid);
 
@@ -123,14 +123,14 @@ const TranslateRift: React.FC = () => {
     let isPlayerAlive = true;
     if (choice == keyAnswer) {
       // Jika benar melakukan penambahan score sebanyak 100
-      setScore(prevScore => prevScore + 150);
+      setScore((prevScore) => prevScore + 150);
     } else {
       // Jika salah akan mengurangi 1 hp (hp awal sebanyak 3)
       setHp((prevHp) => {
         const newHp = prevHp - 1;
         if (newHp === 0) {
           isPlayerAlive = false;
-          updateScoreInFirebase(user.uid, score);
+          updateHighestTranslateRiftInFirebase(user.uid, score);
           setWordShown("");
           setKeyAnswer("");
           setAnswerChoice([]);

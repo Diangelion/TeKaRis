@@ -15,18 +15,13 @@ import ConfirmationDialogue from "../components/ConfirmationDialogue";
 
 // Firebase
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../firebaseConfig";
+import { db, updateHighestBlankCraftScoreInFirebase } from "../firebaseConfig";
 
 // Icons
 import { arrowBackCircle } from "ionicons/icons";
 
 // Style
 import "../styles/GameMode.scss";
-
-//firebase
-import firebase from 'firebase/app';
-import 'firebase/database';
-import { updateScore2InFirebase } from "../firebaseConfig";
 
 // Define data type untuk state question
 interface QuestionProps {
@@ -54,7 +49,7 @@ const BlankCraft: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string>("");
 
   //basa local
-  const storedUserUid = localStorage.getItem('userUid');
+  const storedUserUid = localStorage.getItem("userUid");
 
   // Function untuk melakukan get all question, beserta optionnya, dan kunci jawabannya dari firebase
   const generateQuestion = async () => {
@@ -88,14 +83,14 @@ const BlankCraft: React.FC = () => {
     let isPlayerAlive = true;
     if (answer == question[currentIndex]?.correctAnswer) {
       // Jika benar, menambahkan poin sebanyak 100
-      setScore(prevScore => prevScore + 100);
+      setScore((prevScore) => prevScore + 100);
     } else {
       // Jika salah, mengurangi 1 hp (inisialisasi hp awal sebanyak 3)
       setHp((prevHp) => {
         const newHp = prevHp - 1;
         if (newHp === 0) {
           isPlayerAlive = false;
-          updateScore2InFirebase(user.uid, score);
+          updateHighestBlankCraftScoreInFirebase(user.uid, score);
           setAlertHeader("Game Over!");
           setAlertMessage("You have died.");
           setShowAlertDie(true);
@@ -179,7 +174,7 @@ const BlankCraft: React.FC = () => {
                         className="choice-ion-button"
                         onClick={() => {
                           if (storedUserUid !== null) {
-                            answerCheck(answer, { uid: storedUserUid })
+                            answerCheck(answer, { uid: storedUserUid });
                           }
                         }}
                       >

@@ -26,8 +26,8 @@ interface RegisterDataProps {
   email: string;
   password: string;
   confirmationPassword: string;
-  score: number;
-  score2: number;
+  highestTranslateRift: number;
+  highestBlankCraft: number;
 }
 
 const Register: React.FC = () => {
@@ -37,8 +37,8 @@ const Register: React.FC = () => {
     email: "",
     password: "",
     confirmationPassword: "",
-    score: 0,
-    score2: 0,
+    highestTranslateRift: 0,
+    highestBlankCraft: 0,
   });
   const [isTouched, setIsTouched] = useState(false);
   const [isValidEmail, setIsValidEmail] = useState<boolean>();
@@ -128,8 +128,8 @@ const Register: React.FC = () => {
         registerData.name,
         registerData.email,
         registerData.password,
-        registerData.score,
-        registerData.score2,
+        registerData.highestTranslateRift,
+        registerData.highestBlankCraft
       )) as any;
 
       if (result.isRegistered) {
@@ -138,8 +138,8 @@ const Register: React.FC = () => {
           email: "",
           password: "",
           confirmationPassword: "",
-          score: 0,
-          score2: 0,
+          highestTranslateRift: 0,
+          highestBlankCraft: 0,
         });
         setFailedRegis(false);
         setResultMessage("Berhasil mendaftar.");
