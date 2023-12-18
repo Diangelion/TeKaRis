@@ -11,28 +11,58 @@ import {
   IonRow,
   IonCol,
   IonInput,
+  IonText,
 } from "@ionic/react";
 import { useHistory } from "react-router";
+import { isPlatform } from "@ionic/react";
 
 // Firebase
-import { db, logout } from "../firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { db, storage } from "../firebaseConfig";
+import {
+  collection,
+  getDocs,
+  updateDoc,
+  doc,
+  where,
+  query,
+} from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 // Context
 import { AuthContext } from "../context/ContextProvider";
 import { TeKaRisContextType } from "../context/ContextProvider";
 
+// Capacitor
+import {
+  Camera,
+  CameraResultType,
+  CameraSource,
+  Photo,
+} from "@capacitor/camera";
+import { Directory, Filesystem } from "@capacitor/filesystem";
+
 // Icon
-import { arrowBackCircle } from "ionicons/icons";
+import { arrowBackCircle, cameraReverseOutline } from "ionicons/icons";
 
 // Styling
 import "../styles/Profile.scss";
+import { Capacitor } from "@capacitor/core";
 
 // Data type untuk profile state
 interface ProfileProps {
   name: string;
   email: string;
+  photoURL: string;
 }
+
+// Data type untuk foto
+interface PhotoProps {
+  filePath: string;
+  webviewPath?: string;
+}
+
+// Profile foto default user
+const defaultProfile = "https://ionicframework.com/docs/img/demos/avatar.svg";
 
 const Profile: React.FC = () => {
   // Define variable
@@ -43,11 +73,22 @@ const Profile: React.FC = () => {
   const { auth, setAuth } = authContext;
 
   // Define state
-  const [profile, setProfile] = useState<ProfileProps | null>(null);
+  const [profile, setProfile] = useState<ProfileProps | null>({
+    name: "",
+    email: "",
+    photoURL: "",
+  });
+  const [newProfile, setNewProfile] = useState<ProfileProps | null>({
+    name: "",
+    email: "",
+    photoURL: "",
+  });
+  const [photo, setPhoto] = useState<PhotoProps | null>(null);
   const [isTouched, setIsTouched] = useState(false);
   const [isValid, setIsValid] = useState<boolean>();
   const [isLoading, setIsLoading] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
+  const [resultMessage, setResultMessage] = useState<string>("");
+  const [failedSave, setFailedSave] = useState<boolean>(false);
 
   // Function untuk validasi email ketika edit profile
   const validateEmail = (email: string) => {
@@ -69,38 +110,231 @@ const Profile: React.FC = () => {
     setIsTouched(true);
   };
 
+  // Function untuk menerima input user dan memasukkan ke dalam state
   const handleInputChange = (ev: Event) => {
-    // const { value, name } = ev.target as HTMLInputElement;
-    // setProfile((prevProfile) => ({
-    //   ...prevProfile,
-    //   [name]: value,
-    // }));
+    const { value, name } = ev.target as HTMLInputElement;
+    setNewProfile((prevNewProfile) => {
+      if (!prevNewProfile) {
+        return null;
+      }
+      return {
+        ...prevNewProfile,
+        [name]: value,
+      };
+    });
   };
 
   // Function untuk mendapatkan user data dari firebase dengan melakukan perbandingan uid di session dengan uid di setiap data user di firestore
   const getUserProfile = async () => {
     if (!auth) return;
-    const uid = auth.uid;
-    const soalCollectionRef = collection(db, "users");
-    const snapshot = await getDocs(soalCollectionRef);
-    // Memakai "find" untuk mencocokan uid
-    const currentProfile = snapshot.docs.find(
-      (user) => user.data().uid === uid
-    );
 
-    const profile = {
-      name: currentProfile?.data().name,
-      email: currentProfile?.data().email,
-    } as ProfileProps;
-    setProfile(profile);
+    const uid = auth.uid;
+    const usersCollectionRef = collection(db, "users");
+
+    try {
+      const snapshot = await getDocs(
+        query(usersCollectionRef, where("uid", "==", uid))
+      );
+      const currentProfile = snapshot.docs[0] as any;
+
+      if (currentProfile) {
+        const profile = {
+          name: currentProfile.data().name,
+          email: currentProfile.data().email,
+          photoURL: currentProfile.data().photoURL ?? defaultProfile,
+        } as ProfileProps;
+        setProfile(profile);
+        setNewProfile(profile);
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
   };
 
   // Function untuk logout
   const handleLogout = () => {
-    logout();
     localStorage.clear();
     setAuth(null);
     history.push("/");
+  };
+
+  // Function untuk membuka kamera dan melakukan pengambilan foto
+  const takePhoto = async () => {
+    const photo = await Camera.getPhoto({
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Camera,
+      quality: 100,
+    });
+
+    const fileName = new Date().getTime() + ".jpeg";
+    const savedFileImage = await savePhoto(photo, fileName);
+    setPhoto(savedFileImage);
+    setNewProfile((prevNewProfile: any) => {
+      if (!prevNewProfile) {
+        return null;
+      }
+      return {
+        ...prevNewProfile,
+        photoURL: savedFileImage?.webviewPath ?? defaultProfile,
+      };
+    });
+  };
+
+  // Funciton untuk menyimpan foto yang diambil
+  const savePhoto = async (
+    photo: Photo,
+    fileName: string
+  ): Promise<PhotoProps> => {
+    let base64data: string;
+
+    if (isPlatform("hybrid")) {
+      const file = await Filesystem.readFile({
+        path: fileName,
+        directory: Directory.Data,
+      });
+      base64data = file.data as string;
+    } else {
+      base64data = await base64FromPath(photo.webPath!);
+    }
+
+    const savedFile = await Filesystem.writeFile({
+      path: fileName,
+      directory: Directory.Data,
+      data: base64data,
+    });
+
+    if (isPlatform("hybrid")) {
+      return {
+        filePath: savedFile.uri,
+        webviewPath: Capacitor.convertFileSrc(savedFile.uri),
+      };
+    }
+    return {
+      filePath: fileName,
+      webviewPath: photo.webPath,
+    };
+  };
+
+  // Function untuk mengambil path file dan mengembalikan representasi base64 dari file tersebut dalam bentuk string
+  const base64FromPath = async (path: string): Promise<string> => {
+    const response = await fetch(path);
+    const blob = await response.blob();
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          resolve(reader.result);
+        } else {
+          reject("Method didn't return a string.");
+        }
+      };
+
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  // Function upload foto ke firebase
+  const savePhotoToFirebase = async (photo: PhotoProps) => {
+    try {
+      // Membuat ref ke firebase storage
+      const storageRef = ref(
+        storage,
+        `user_profile_photo/${auth?.uid}/${photo.filePath}`
+      );
+
+      // System read the file content
+      const fileContent = await Filesystem.readFile({
+        path: photo.filePath,
+        directory: Directory.Data,
+      });
+
+      // Melakukan decode Base64 string to binary
+      const binaryString = atob(fileContent.data as string);
+
+      // Membuat Blob dari binary string
+      const blob = new Blob(
+        [new Uint8Array([...binaryString].map((char) => char.charCodeAt(0)))],
+        { type: "image/jpeg" }
+      );
+
+      // Membuat File object
+      const file = new File([blob], photo.filePath, { type: "image/jpeg" });
+
+      // Upload file ke firestore
+      await uploadBytes(storageRef, file);
+
+      // Melakukan return download URL
+      return await getDownloadURL(storageRef);
+    } catch (error) {
+      return error;
+    }
+  };
+
+  // Function untuk update profile
+  const handleSaveProfile = async () => {
+    if (
+      profile?.name === newProfile?.name &&
+      profile?.email === newProfile?.email &&
+      !photo
+    ) {
+      setResultMessage("Profile successfully saved.");
+      return;
+    }
+
+    setResultMessage("");
+    setIsLoading(true);
+    try {
+      // Save the updated profile information to Firestore
+      if (auth?.uid) {
+        const usersCollectionRef = collection(db, "users");
+        const snapshot = await getDocs(
+          query(usersCollectionRef, where("uid", "==", auth.uid))
+        );
+
+        if (!snapshot.empty) {
+          const userDocRef = snapshot.docs[0].ref;
+
+          await updateDoc(userDocRef, {
+            name: newProfile?.name,
+            email: newProfile?.email,
+          });
+
+          // Cek apakah ada update pada profile foto
+          let downloadURL: string | null = null;
+          if (photo) {
+            downloadURL = (await savePhotoToFirebase(photo)) as string;
+            await updateDoc(userDocRef, {
+              photoURL: downloadURL,
+            });
+          }
+
+          // Fetch the updated profile data from Firestore
+          await getUserProfile();
+
+          setFailedSave(false);
+          setResultMessage("Berhasil memperbarui profile.");
+        } else {
+          setFailedSave(true);
+          setResultMessage("Pengguna tidak ditemukan.");
+        }
+      } else {
+        setFailedSave(true);
+        setResultMessage("Sesi pengguna tidak ditemukan.");
+      }
+    } catch (error) {
+      setResultMessage("Gagal memperbarui profile. Silakan coba kembali.");
+      setFailedSave(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleBackModal = () => {
+    setResultMessage("");
+    setPhoto(null);
+    modal.current?.dismiss();
   };
 
   useEffect(() => {
@@ -135,36 +369,40 @@ const Profile: React.FC = () => {
             }}
           >
             <div className="profile-photo-container">
-              <img
-                alt="Silhouette of a person's head"
-                src="https://ionicframework.com/docs/img/demos/avatar.svg"
-              />
+              <img src={profile?.photoURL} />
             </div>
 
             <IonCardContent>
-              <div>{profile?.name ? profile.name : "Getting name..."}</div>
-              <div>{profile?.email ? profile.email : "Getting email..."}</div>
+              <div>{profile?.name ?? "Getting name..."}</div>
+              <div>{profile?.email ?? "Getting email..."}</div>
             </IonCardContent>
           </IonCard>
 
           <div className="button-section">
-            <IonButton id="open-modal">Edit Profile</IonButton>
+            <IonButton id="open-edit-profile">Edit Profile</IonButton>
             <IonButton onClick={handleLogout}>Logout</IonButton>
           </div>
         </div>
 
-        <IonModal ref={modal} trigger="open-modal">
+        <IonModal ref={modal} trigger="open-edit-profile">
           <IonContent className="ion-padding">
             <div className="edit-profile-header">
+              <IonIcon
+                icon={arrowBackCircle}
+                size="large"
+                onClick={handleBackModal}
+              ></IonIcon>
               <h1>Edit Profile</h1>
             </div>
 
             <div className="edit-profile-content">
               <div className="profile-photo-container">
-                <img
-                  alt="Silhouette of a person's head"
-                  src="https://ionicframework.com/docs/img/demos/avatar.svg"
-                />
+                <img src={newProfile?.photoURL} />
+                <IonIcon
+                  icon={cameraReverseOutline}
+                  size="large"
+                  onClick={takePhoto}
+                ></IonIcon>
               </div>
 
               <IonGrid>
@@ -177,6 +415,7 @@ const Profile: React.FC = () => {
                       name="name"
                       labelPlacement="floating"
                       helperText="Masukkan nama"
+                      value={newProfile?.name}
                       onIonInput={(event) => {
                         handleInputChange(event);
                       }}
@@ -197,6 +436,7 @@ const Profile: React.FC = () => {
                       labelPlacement="floating"
                       helperText="Masukkan email"
                       errorText="Email tidak valid"
+                      value={newProfile?.email}
                       onIonInput={(event) => {
                         validate(event);
                         handleInputChange(event);
@@ -205,14 +445,27 @@ const Profile: React.FC = () => {
                     ></IonInput>
                   </IonCol>
                 </IonRow>
-              </IonGrid>
 
-              <IonButton
-                className="option-ion-button"
-                onClick={() => modal.current?.dismiss()}
-              >
-                Back
-              </IonButton>
+                {resultMessage !== "" && (
+                  <IonRow>
+                    <IonGrid>
+                      <IonText color={`${failedSave ? "danger" : "success"}`}>
+                        {resultMessage}
+                      </IonText>
+                    </IonGrid>
+                  </IonRow>
+                )}
+
+                <IonRow>
+                  <IonButton
+                    className="edit-profile-save-button"
+                    onClick={handleSaveProfile}
+                    disabled={isLoading}
+                  >
+                    Save
+                  </IonButton>
+                </IonRow>
+              </IonGrid>
             </div>
           </IonContent>
         </IonModal>

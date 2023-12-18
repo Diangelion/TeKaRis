@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore, addDoc, collection } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -29,6 +30,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage();
 
 // Function untuk menampilkan error message berdasarkan kode
 const getFirebaseErrorMessage = (code: string) => {
@@ -90,26 +92,11 @@ const registerWithEmailAndPassword = async (
   }
 };
 
-// Function untuk mengirimkan reset password ke email pengguna
-const sendPasswordReset = async (email: string) => {
-  try {
-    await sendPasswordResetEmail(auth, email);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-// Function untuk logout
-const logout = () => {
-  signOut(auth);
-};
-
 // Export variable and function
 export {
   auth,
   db,
+  storage,
   logInWithEmailAndPassword,
   registerWithEmailAndPassword,
-  sendPasswordReset,
-  logout,
 };

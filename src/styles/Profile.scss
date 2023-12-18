@@ -5,29 +5,10 @@
     gap: 20px;
     padding-left: 20px;
     height: 20%;
-    border: 1px solid white;
+
     h1 {
       margin: 0;
     }
-  }
-
-  .profile-content-section {
-    height: 80%;
-    border: 1px solid white;
-  }
-
-  .profile-photo-container {
-    width: 150px;
-    height: 150px;
-    margin: auto;
-  }
-
-  .profile-photo-container img {
-    border-radius: 100%;
-    aspect-ratio: 1;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
   }
 
   .button-section {
@@ -42,14 +23,48 @@
   }
 }
 
+.profile-content-section {
+  height: 80%;
+}
+
+.edit-profile-content {
+  height: 80%;
+  padding-top: 25%;
+}
+
+.profile-photo-container {
+  width: 150px;
+  height: 150px;
+  margin: auto;
+  position: relative;
+
+  img {
+    border-radius: 100%;
+    aspect-ratio: 1;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+  }
+
+  ion-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}
+
 .edit-profile-header {
-  border: 1px solid white;
   display: flex;
   align-items: center;
-  justify-content: center;
   height: 10%;
+  gap: 20px;
 
   h1 {
     text-align: center;
   }
+}
+
+.edit-profile-save-button {
+  width: 150px;
+  margin: 40px auto 0;
 }

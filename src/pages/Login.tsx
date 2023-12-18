@@ -112,6 +112,7 @@ const Login: React.FC = () => {
 
   // Function untuk menyimpan session user ketika berhasil login
   const saveToLocalStorage = (data: any) => {
+    console.log(data);
     const storeData = {
       uid: data.user.uid,
       email: data.user.email,
