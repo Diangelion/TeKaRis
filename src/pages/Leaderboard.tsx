@@ -1,5 +1,5 @@
 import { IonButton, IonContent, IonPage, IonIcon } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 
 // Icon
@@ -8,12 +8,23 @@ import { arrowBackCircle } from "ionicons/icons";
 // Component
 import CardLeaderboard from "../components/CardLeaderboard";
 
+// Firestore
+import { getTopScores } from "../firebaseConfig";
+import {
+  collection,
+  getDocs,
+  updateDoc,
+  doc,
+  where,
+  query,
+} from "firebase/firestore";
+
 // Styling
 import "../styles/Leaderboard.scss";
 
-interface dataLeaderboard {
+interface UserScore {
   nama: string;
-  point: string;
+  point: number;
 }
 
 const Leaderboard: React.FC = () => {
@@ -22,91 +33,35 @@ const Leaderboard: React.FC = () => {
 
   // Define state
   const [mode, setMode] = useState<number>(1);
-  const [dataMode1, setDataMode1] = useState<dataLeaderboard[]>([
-    {
-      nama: "John Wick",
-      point: "10,000",
-    },
-    {
-      nama: "John Wick",
-      point: "10,000",
-    },
-    {
-      nama: "John Wick",
-      point: "10,000",
-    },
-    {
-      nama: "John Wick",
-      point: "10,000",
-    },
-    {
-      nama: "John Wick",
-      point: "10,000",
-    },
-    {
-      nama: "John Wick",
-      point: "10,000",
-    },
-    {
-      nama: "John Wick",
-      point: "10,000",
-    },
-    {
-      nama: "John Wick",
-      point: "10,000",
-    },
-    {
-      nama: "John Wick",
-      point: "10,000",
-    },
-    {
-      nama: "John Wick",
-      point: "10,000",
-    },
-  ]);
+  const [scoreMode1, setScoreMode1] = useState<UserScore[]>([]);
+  const [scoreMode2, setScoreMode2] = useState<UserScore[]>([]);
 
-  const [dataMode2, setDataMode2] = useState<dataLeaderboard[]>([
-    {
-      nama: "John Doe",
-      point: "11,000",
-    },
-    {
-      nama: "John Doe",
-      point: "11,000",
-    },
-    {
-      nama: "John Doe",
-      point: "11,000",
-    },
-    {
-      nama: "John Doe",
-      point: "11,000",
-    },
-    {
-      nama: "John Doe",
-      point: "11,000",
-    },
-    {
-      nama: "John Doe",
-      point: "11,000",
-    },
-    {
-      nama: "John Doe",
-      point: "11,000",
-    },
-    {
-      nama: "John Doe",
-      point: "11,000",
-    },
-    {
-      nama: "John Doe",
-      point: "11,000",
-    },
-    {
-      nama: "John Doe",
-      point: "11,000",
-    },
-  ]);
+  useEffect(() => {
+    const fetchTopScore = async () => {
+      try {
+        const { topScores1, topScores2 } = await getTopScores();
+    
+        // Set top score mode 1
+        const updatedScoreMode1 = topScores1.map((item) => ({
+          nama: item.name,
+          point: item.score,
+        }));
+        setScoreMode1(updatedScoreMode1);
+
+        // Set top score mode 2
+        const updatedScoreMode2 = topScores2.map((item) => ({
+          nama: item.name,
+          point: item.score,
+        }));
+        setScoreMode2(updatedScoreMode2);
+        
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+
+    fetchTopScore();
+  },[]);
 
   return (
     <IonPage id="LeaderboardPage">
@@ -138,20 +93,22 @@ const Leaderboard: React.FC = () => {
         </div>
 
         <div className="leaderboard-content-section">
-          {mode == 1 &&
-            dataMode1.map((item, index) => (
+          {mode == 1 && scoreMode1.length > 0 &&
+            scoreMode1.map((item, index) => (
               <CardLeaderboard
+                key={index}
                 number={index + 1}
                 name={item.nama}
-                point={item.point}
+                point={item.point.toString()}
               />
             ))}
-          {mode == 2 &&
-            dataMode2.map((item, index) => (
+          {mode == 2 && scoreMode2.length > 0 &&
+            scoreMode2.map((item, index) => (
               <CardLeaderboard
+                key={index}
                 number={index + 1}
                 name={item.nama}
-                point={item.point}
+                point={item.point.toString()}
               />
             ))}
         </div>
