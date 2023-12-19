@@ -212,7 +212,7 @@ const getTopScores = async (): Promise<{
     if (!querySnapshot.empty) {
       topScores1 = querySnapshot.docs.map((doc) => {
         const userData = doc.data();
-        const userScore = userData?.highestTranslateRift || 0;
+        const userScore = userData?.score || 0;
         return { name: userData.name, score: userScore } as UserScore;
       });
     }
@@ -220,7 +220,7 @@ const getTopScores = async (): Promise<{
     if (!querySnapshot2.empty) {
       topScores2 = querySnapshot2.docs.map((doc) => {
         const userData = doc.data();
-        const userScore = userData?.highestBlankCraft || 0;
+        const userScore = userData?.score2 || 0;
         return { name: userData.name, score: userScore } as UserScore;
       });
     }

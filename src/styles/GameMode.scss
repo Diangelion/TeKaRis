@@ -4,7 +4,7 @@
   height: 100%;
 
   .header-section {
-    height: 10%;
+    height: 14%;
     border: 1px solid white;
 
     .header-exit-section {
@@ -14,11 +14,46 @@
         margin: 0;
       }
     }
+
+    .header-detail {
+      display: flex;
+      justify-content: space-between;
+      margin-left: 3%;
+      margin-right: 3%;
+    }
   }
 
   .content-section {
-    height: 60%;
+    height: 45%;
     border: 1px solid white;
+
+    .player {
+      position: absolute;
+      width: 40%;
+      height: 30%;
+    }
+
+    .enemy {
+      position: absolute;
+      width: 40%;
+      height: 30%;
+      right: 0;
+    }
+
+    .playerGif {
+      position: absolute;
+      width: 80%;
+      height: 50%;
+      top: 10%;
+    }
+
+    .enemyGif {
+      position: absolute;
+      width: 80%;
+      height: 50%;
+      top: 10%;
+      right: -5%;
+    }
 
     h2 {
       text-align: center;
@@ -27,7 +62,7 @@
   }
 
   .choice-section {
-    height: 30%;
+    height: 40%;
     border: 1px solid white;
     display: flex;
     flex-direction: column;

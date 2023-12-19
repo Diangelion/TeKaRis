@@ -48,6 +48,10 @@ const BlankCraft: React.FC = () => {
   const [alertHeader, setAlertHeader] = useState<string>("");
   const [alertMessage, setAlertMessage] = useState<string>("");
 
+  // Boolean animation
+  const [isAttack, setIsAttack] = useState<boolean>(false);
+  const [isAttacked, setIsAttacked] = useState<boolean>(false);
+
   //basa local
   const storedUserUid = localStorage.getItem("userUid");
 
@@ -83,9 +87,11 @@ const BlankCraft: React.FC = () => {
     let isPlayerAlive = true;
     if (answer == question[currentIndex]?.correctAnswer) {
       // Jika benar, menambahkan poin sebanyak 100
+      setIsAttack(true);
       setScore((prevScore) => prevScore + 100);
     } else {
       // Jika salah, mengurangi 1 hp (inisialisasi hp awal sebanyak 3)
+      setIsAttacked(true);
       setHp((prevHp) => {
         const newHp = prevHp - 1;
         if (newHp === 0) {
@@ -101,6 +107,18 @@ const BlankCraft: React.FC = () => {
     if (!isPlayerAlive) return;
     generateRandomIndex(question);
   };
+
+  // Function to delay for animation
+  useEffect(() => {
+    const delayedFunction = () => {
+      setIsAttack(false);
+      setIsAttacked(false);
+    };
+
+    const timeoutId = setTimeout(delayedFunction, 3000);
+
+    return () => clearTimeout(timeoutId);
+  }, [isAttack, isAttacked]);
 
   // Function untuk handle exit ketika sedang dalam match
   const handleExit = () => {
@@ -140,8 +158,10 @@ const BlankCraft: React.FC = () => {
                 ></IonIcon>
                 <h1>Blank Craft</h1>
               </div>
-
-              <h2>Current Score: {score}</h2>
+              <div className="header-detail">
+                <h2>Current Score: {score}</h2>
+                <h2>Health: {hp}</h2>
+              </div>
             </div>
 
             {showAlertDie ? (
@@ -164,6 +184,23 @@ const BlankCraft: React.FC = () => {
               <>
                 <div className="content-section">
                   <h2>{question[currentIndex]?.question}</h2>
+
+                  {isAttack ? (
+                    <>
+                      <img className="playerGif" src="../assets/Attack.gif" alt="" />
+                      <img className="enemyGif" src="../assets/EnemyHit.gif" alt="" />
+                    </>
+                  ) : isAttacked ? (
+                    <>
+                      <img className="playerGif" src="../assets/Hit.gif" alt="" />
+                      <img className="enemyGif" src="../assets/EnemyAttack.gif" alt="" />
+                    </>
+                  ) : (
+                    <>
+                      <img className="player" src="../assets/Idle.png" alt="" />
+                      <img className="enemy" src="../assets/EnemyIdle.png" alt="" />
+                    </>
+                  )}
                 </div>
 
                 <div className="choice-section">
